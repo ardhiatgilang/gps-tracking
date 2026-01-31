@@ -1,0 +1,25 @@
+# Ignore uploaded files
+uploads/laporan/*
+!uploads/laporan/.gitkeep
+
+# Ignore config files with sensitive data
+config/database.php
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ignore logs
+*.log
+
+# Ignore temporary files
+*.tmp
+*.bak
+*.cache
