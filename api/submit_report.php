@@ -5,10 +5,26 @@
  * Termasuk upload foto dan ekstraksi EXIF data
  */
 
+// Suppress PHP errors from breaking JSON output
+error_reporting(0);
+ini_set('display_errors', 0);
+
 require_once '../config/database.php';
 
 header('Content-Type: application/json');
-startSecureSession();
+
+try {
+    startSecureSession();
+
+// Auto-migrate: Add jenis_pekerjaan column if not exists
+$checkColumn = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE()
+                AND TABLE_NAME = 'visit_reports'
+                AND COLUMN_NAME = 'jenis_pekerjaan'";
+$colCheck = executeQuery($checkColumn);
+if ($colCheck['success'] && $colCheck['data']->num_rows === 0) {
+    executeQuery("ALTER TABLE visit_reports ADD COLUMN jenis_pekerjaan VARCHAR(50) DEFAULT NULL AFTER foto_timestamp");
+}
 
 // Check if user is logged in dan role admin
 if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
@@ -20,12 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $admin_id = $_SESSION['user_id'];
-$project_id = intval($_POST['project_id']);
-$latitude = floatval($_POST['latitude']);
-$longitude = floatval($_POST['longitude']);
-$accuracy = floatval($_POST['accuracy']);
-$catatan = sanitizeInput($_POST['catatan']);
-$waktu_kunjungan = $_POST['waktu_kunjungan'];
+$project_id = isset($_POST['project_id']) ? intval($_POST['project_id']) : 0;
+$latitude = isset($_POST['latitude']) ? floatval($_POST['latitude']) : 0;
+$longitude = isset($_POST['longitude']) ? floatval($_POST['longitude']) : 0;
+$accuracy = isset($_POST['accuracy']) ? floatval($_POST['accuracy']) : 0;
+$catatan = isset($_POST['catatan']) ? sanitizeInput($_POST['catatan']) : '';
+$jenis_pekerjaan = isset($_POST['jenis_pekerjaan']) ? sanitizeInput($_POST['jenis_pekerjaan']) : null;
+$waktu_kunjungan = isset($_POST['waktu_kunjungan']) ? $_POST['waktu_kunjungan'] : date('Y-m-d H:i:s');
 
 // Validasi input
 if (empty($project_id) || empty($latitude) || empty($longitude)) {
@@ -102,8 +119,8 @@ if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
 $insertQuery = "INSERT INTO visit_reports
                 (admin_id, project_id, latitude, longitude, accuracy, jarak_dari_project,
                  is_valid, foto_laporan, foto_latitude, foto_longitude, foto_timestamp,
-                 catatan, waktu_kunjungan)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                 jenis_pekerjaan, catatan, waktu_kunjungan)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 $params = [
     $admin_id,
@@ -117,11 +134,12 @@ $params = [
     $foto_latitude,
     $foto_longitude,
     $foto_timestamp,
+    $jenis_pekerjaan,
     $catatan,
     $waktu_kunjungan
 ];
 
-$result = executeQuery($insertQuery, "iiddddssddsss", $params);
+$result = executeQuery($insertQuery, "iiddddssddssss", $params);
 
 if ($result['success']) {
     // Update daily summary
@@ -142,6 +160,12 @@ if ($result['success']) {
         unlink($upload_path);
     }
     jsonResponse(false, 'Gagal menyimpan laporan: ' . $result['error'], null);
+}
+
+} catch (Exception $e) {
+    jsonResponse(false, 'Error: ' . $e->getMessage(), null);
+} catch (Error $e) {
+    jsonResponse(false, 'Error: ' . $e->getMessage(), null);
 }
 
 /**

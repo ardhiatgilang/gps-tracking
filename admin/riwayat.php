@@ -38,21 +38,91 @@ $reportsResult = executeQuery($reportsQuery, "iii", [$user['id'], $limit, $offse
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
+    <?php include '../includes/page-loader.php'; ?>
+
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="navbar-brand">GPS Tracking System</div>
+        <a href="index.php" class="navbar-brand" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;">
+            <svg width="28" height="28" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="pinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#3b82f6"/><stop offset="100%" style="stop-color:#1d4ed8"/>
+                    </linearGradient>
+                    <linearGradient id="checkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#10b981"/><stop offset="100%" style="stop-color:#059669"/>
+                    </linearGradient>
+                </defs>
+                <path d="M50 5 C30 5 15 22 15 40 C15 60 50 95 50 95 C50 95 85 60 85 40 C85 22 70 5 50 5 Z" fill="url(#pinGrad)" stroke="#1e40af" stroke-width="2"/>
+                <circle cx="50" cy="38" r="22" fill="white"/>
+                <path d="M38 38 L46 46 L62 30" stroke="url(#checkGrad)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>LACAKIN</span>
+        </a>
         <div class="navbar-menu">
             <a href="index.php">Dashboard</a>
-            <a href="tracking.php">Tracking GPS</a>
             <a href="laporan.php">Buat Laporan</a>
             <a href="riwayat.php" class="active">Riwayat</a>
         </div>
         <div class="navbar-user">
-            <div class="user-info">
-                <div class="user-name"><?php echo htmlspecialchars($user['nama_lengkap']); ?></div>
-                <div class="user-role">Admin Lapangan</div>
+            <div class="profile-trigger" onclick="toggleProfileDropdown()">
+                <div class="profile-avatar">
+                    <?php
+                    $initials = strtoupper(substr($user['nama_lengkap'], 0, 1));
+                    if (strpos($user['nama_lengkap'], ' ') !== false) {
+                        $parts = explode(' ', $user['nama_lengkap']);
+                        $initials = strtoupper(substr($parts[0], 0, 1) . substr(end($parts), 0, 1));
+                    }
+                    if (!empty($user['foto_profil']) && file_exists('../uploads/profile/' . $user['foto_profil'])):
+                    ?>
+                        <img src="../uploads/profile/<?php echo htmlspecialchars($user['foto_profil']); ?>" alt="Foto">
+                    <?php else: echo $initials; endif; ?>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
             </div>
-            <a href="../logout.php" class="btn btn-secondary btn-sm">Logout</a>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="profile-dropdown-header">
+                    <div class="profile-dropdown-avatar">
+                        <?php if (!empty($user['foto_profil']) && file_exists('../uploads/profile/' . $user['foto_profil'])): ?>
+                            <img src="../uploads/profile/<?php echo htmlspecialchars($user['foto_profil']); ?>" alt="Foto">
+                        <?php else: echo $initials; endif; ?>
+                    </div>
+                    <div class="profile-dropdown-name"><?php echo htmlspecialchars($user['nama_lengkap']); ?></div>
+                    <div class="profile-dropdown-role">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        Admin Lapangan
+                    </div>
+                </div>
+                <div class="profile-dropdown-body">
+                    <a href="profil.php" class="profile-dropdown-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Edit Profil
+                    </a>
+                    <a href="index.php" class="profile-dropdown-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <div class="profile-dropdown-divider"></div>
+                    <a href="../logout.php" class="profile-dropdown-item logout">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -171,5 +241,19 @@ $reportsResult = executeQuery($reportsQuery, "iii", [$user['id'], $limit, $offse
             </div>
         </div>
     </div>
+
+    <script>
+        // Profile dropdown toggle
+        function toggleProfileDropdown() {
+            document.getElementById('profileDropdown').classList.toggle('active');
+        }
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('profileDropdown');
+            const trigger = document.querySelector('.profile-trigger');
+            if (trigger && !trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
