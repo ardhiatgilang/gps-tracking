@@ -274,11 +274,14 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
                          onmouseout="this.style.background='white'">
                         <div style="display: flex; justify-content: space-between; align-items: start;">
                             <div style="font-weight: 600; color: #1e40af;"><?php echo htmlspecialchars($project['nama_project']); ?></div>
-                            <div class="project-distance" style="font-size: 11px; color: #10b981; font-weight: 600; background: #ecfdf5; padding: 2px 8px; border-radius: 10px; display: none;">
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 2px;">
-                                    <circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/>
-                                </svg>
-                                ± <span class="distance-value">-</span>
+                            <div class="project-distance" style="font-size: 11px; color: #10b981; font-weight: 600; background: #ecfdf5; padding: 4px 10px; border-radius: 10px; display: none; text-align: right; line-height: 1.5;">
+                                <div>
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 2px;">
+                                        <circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/>
+                                    </svg>
+                                    ± <span class="distance-value">-</span>
+                                </div>
+                                <div class="time-estimate" style="font-size: 10px; color: #666; font-weight: 500;"></div>
                             </div>
                         </div>
                         <div style="font-size: 12px; color: #666; margin-top: 3px;"><?php echo htmlspecialchars($project['alamat']); ?></div>
@@ -293,13 +296,14 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
                         <div>
                             <div id="selected-name" style="font-weight: 600; font-size: 16px; color: #1e40af;"></div>
                             <div id="selected-alamat" style="font-size: 13px; color: #666; margin-top: 3px;"></div>
-                            <div style="display: flex; gap: 15px; margin-top: 5px;">
+                            <div style="display: flex; gap: 15px; margin-top: 5px; flex-wrap: wrap;">
                                 <div id="selected-radius" style="font-size: 12px; color: #999;"></div>
                                 <div id="selected-distance" style="font-size: 12px; color: #10b981; font-weight: 600; display: none;">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 3px;">
                                         <circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/>
                                     </svg>
                                     ± <span id="selected-distance-value">-</span>
+                                    <span id="selected-time-estimate" style="margin-left: 8px; color: #666; font-weight: 500;"></span>
                                 </div>
                             </div>
                         </div>
@@ -706,13 +710,39 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
             return R * c; // Distance in meters
         }
 
-        // Format distance for display
+        // Road factor: jalan nyata biasanya 1.4x lebih jauh dari garis lurus
+        const ROAD_FACTOR = 1.5;
+
+        // Format distance for display (sudah dikoreksi dengan road factor)
         function formatDistance(meters) {
-            if (meters < 1000) {
-                return Math.round(meters) + ' m';
+            const roadMeters = meters * ROAD_FACTOR;
+            if (roadMeters < 1000) {
+                return Math.round(roadMeters) + ' m';
             } else {
-                return (meters / 1000).toFixed(1) + ' km';
+                return (roadMeters / 1000).toFixed(1) + ' km';
             }
+        }
+
+        // Estimate travel time with road distance correction
+        function estimateTime(meters) {
+            const roadDistance = meters * ROAD_FACTOR;
+
+            // Kecepatan rata-rata berdasarkan jarak (kota Jakarta)
+            // Jarak dekat (<5km): 20 km/h (macet, jalan kecil)
+            // Jarak sedang (5-15km): 25 km/h
+            // Jarak jauh (>15km): 30 km/h
+            const distKm = roadDistance / 1000;
+            let avgSpeedKmh;
+            if (distKm < 5) avgSpeedKmh = 20;
+            else if (distKm < 15) avgSpeedKmh = 25;
+            else avgSpeedKmh = 30;
+
+            const minutes = distKm / avgSpeedKmh * 60;
+            if (minutes < 1) return '< 1 menit';
+            if (minutes < 60) return '~' + Math.round(minutes) + ' menit';
+            const hours = Math.floor(minutes / 60);
+            const mins = Math.round(minutes % 60);
+            return '~' + hours + 'j ' + mins + 'm';
         }
 
         // Update all project distances
@@ -726,11 +756,15 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
 
                 const distanceEl = item.querySelector('.project-distance');
                 const distanceValueEl = item.querySelector('.distance-value');
+                const timeEstEl = item.querySelector('.time-estimate');
 
                 if (distanceEl && distanceValueEl) {
                     distanceValueEl.textContent = formatDistance(distance);
-                    distanceEl.style.display = 'inline-flex';
-                    distanceEl.style.alignItems = 'center';
+                    distanceEl.style.display = 'inline-block';
+                }
+
+                if (timeEstEl) {
+                    timeEstEl.textContent = estimateTime(distance);
                 }
 
                 // Store distance for sorting
@@ -851,10 +885,11 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
                 document.getElementById('selected-alamat').textContent = alamat;
                 document.getElementById('selected-radius').textContent = 'Radius: ' + radius + 'm';
 
-                // Show distance if available
+                // Show distance and time estimate if available
                 if (userLat !== null && userLng !== null) {
                     const distance = calculateDistance(userLat, userLng, selectedLat, selectedLng);
                     document.getElementById('selected-distance-value').textContent = formatDistance(distance);
+                    document.getElementById('selected-time-estimate').textContent = '(' + estimateTime(distance) + ')';
                     document.getElementById('selected-distance').style.display = 'inline-flex';
                 }
 
@@ -903,10 +938,10 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
             });
         });
 
-        // Open Google Maps
+        // Open Google Maps with navigation
         function openGoogleMaps() {
             if (selectedLat && selectedLng) {
-                window.open(`https://www.google.com/maps?q=${selectedLat},${selectedLng}`, '_blank');
+                window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedLat},${selectedLng}`, '_blank');
             }
         }
     </script>

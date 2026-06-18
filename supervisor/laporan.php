@@ -190,7 +190,7 @@ $adminResult = executeQuery($adminQuery);
 
                 <!-- Export Button -->
                 <a href="../api/export_laporan.php?date=<?php echo urlencode($filter_date); ?>&admin=<?php echo $filter_admin; ?>"
-                   class="btn btn-success" style="margin-left: auto;">
+                   class="btn btn-success no-loader" style="margin-left: auto;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 5px;">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                         <polyline points="7 10 12 15 17 10"/>

@@ -13,39 +13,75 @@ checkRole('supervisor');
 $user = getCurrentUser();
 
 // Date filter
-$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d', strtotime('-7 days'));
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d', strtotime('-30 days'));
 $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d');
 
-// Get akurasi GPS statistics
-$gpsAccuracyQuery = "SELECT
-                        location_type,
-                        COUNT(*) as total_readings,
-                        ROUND(AVG(accuracy), 2) as mean_accuracy,
-                        ROUND(MIN(accuracy), 2) as min_accuracy,
-                        ROUND(MAX(accuracy), 2) as max_accuracy,
-                        ROUND(STDDEV(accuracy), 2) as std_dev,
-                        ROUND(SUM(CASE WHEN accuracy <= 20 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) as persen_akurasi_baik
-                     FROM gps_tracking
-                     WHERE DATE(timestamp) BETWEEN ? AND ?
-                     GROUP BY location_type";
-$gpsAccuracyResult = executeQuery($gpsAccuracyQuery, "ss", [$start_date, $end_date]);
-
 // Get produktivitas summary
+// total_jarak = jumlah jarak antar site yang dikunjungi berurutan dalam satu hari
 $produktivitasQuery = "SELECT
+                        u.id,
                         u.nama_lengkap,
-                        COUNT(DISTINCT ds.tanggal) as total_hari_kerja,
-                        SUM(ds.jumlah_kunjungan) as total_kunjungan,
-                        SUM(ds.jumlah_kunjungan_valid) as total_kunjungan_valid,
-                        ROUND(SUM(ds.total_jarak_tempuh), 2) as total_jarak,
+                        COUNT(DISTINCT DATE(vr.waktu_kunjungan)) as total_hari_kerja,
+                        COUNT(vr.id) as total_kunjungan,
+                        SUM(CASE WHEN vr.is_valid = 1 THEN 1 ELSE 0 END) as total_kunjungan_valid,
+                        ROUND(COALESCE((
+                            SELECT SUM(
+                                6371 * 2 * ASIN(SQRT(
+                                    POWER(SIN((RADIANS(pl2.latitude) - RADIANS(pl1.latitude))/2), 2) +
+                                    COS(RADIANS(pl1.latitude)) * COS(RADIANS(pl2.latitude)) *
+                                    POWER(SIN((RADIANS(pl2.longitude) - RADIANS(pl1.longitude))/2), 2)
+                                )) * 1.5
+                            )
+                            FROM visit_reports a
+                            JOIN project_locations pl1 ON a.project_id = pl1.id
+                            JOIN visit_reports b ON b.admin_id = a.admin_id
+                                AND DATE(b.waktu_kunjungan) = DATE(a.waktu_kunjungan)
+                                AND b.waktu_kunjungan = (
+                                    SELECT MIN(c.waktu_kunjungan) FROM visit_reports c
+                                    WHERE c.admin_id = a.admin_id
+                                    AND DATE(c.waktu_kunjungan) = DATE(a.waktu_kunjungan)
+                                    AND c.waktu_kunjungan > a.waktu_kunjungan
+                                )
+                            JOIN project_locations pl2 ON b.project_id = pl2.id
+                            WHERE a.admin_id = u.id
+                            AND DATE(a.waktu_kunjungan) BETWEEN ? AND ?
+                        ), 0), 2) as total_jarak,
                         ROUND(AVG(ds.efisiensi_score), 2) as avg_efisiensi,
                         ROUND(AVG(ds.success_rate), 2) as avg_success_rate,
-                        ROUND(AVG(ds.rata_rata_jarak_per_kunjungan), 2) as avg_jarak_per_kunjungan
-                       FROM daily_summary ds
-                       JOIN users u ON ds.admin_id = u.id
-                       WHERE ds.tanggal BETWEEN ? AND ?
+                        ROUND(COALESCE((
+                            SELECT SUM(
+                                6371 * 2 * ASIN(SQRT(
+                                    POWER(SIN((RADIANS(pl2.latitude) - RADIANS(pl1.latitude))/2), 2) +
+                                    COS(RADIANS(pl1.latitude)) * COS(RADIANS(pl2.latitude)) *
+                                    POWER(SIN((RADIANS(pl2.longitude) - RADIANS(pl1.longitude))/2), 2)
+                                )) * 1.5
+                            ) / NULLIF(COUNT(DISTINCT DATE(a2.waktu_kunjungan)), 0)
+                            FROM visit_reports a2
+                            JOIN project_locations pl1 ON a2.project_id = pl1.id
+                            JOIN visit_reports b2 ON b2.admin_id = a2.admin_id
+                                AND DATE(b2.waktu_kunjungan) = DATE(a2.waktu_kunjungan)
+                                AND b2.waktu_kunjungan = (
+                                    SELECT MIN(c2.waktu_kunjungan) FROM visit_reports c2
+                                    WHERE c2.admin_id = a2.admin_id
+                                    AND DATE(c2.waktu_kunjungan) = DATE(a2.waktu_kunjungan)
+                                    AND c2.waktu_kunjungan > a2.waktu_kunjungan
+                                )
+                            JOIN project_locations pl2 ON b2.project_id = pl2.id
+                            WHERE a2.admin_id = u.id
+                            AND DATE(a2.waktu_kunjungan) BETWEEN ? AND ?
+                        ), 0), 2) as avg_jarak_per_hari
+                       FROM visit_reports vr
+                       JOIN users u ON vr.admin_id = u.id
+                       LEFT JOIN daily_summary ds ON ds.admin_id = u.id AND ds.tanggal BETWEEN ? AND ?
+                       WHERE DATE(vr.waktu_kunjungan) BETWEEN ? AND ?
                        GROUP BY u.id, u.nama_lengkap
                        ORDER BY total_kunjungan DESC";
-$produktivitasResult = executeQuery($produktivitasQuery, "ss", [$start_date, $end_date]);
+$produktivitasResult = executeQuery($produktivitasQuery, "ssssssss", [
+    $start_date, $end_date,
+    $start_date, $end_date,
+    $start_date, $end_date,
+    $start_date, $end_date
+]);
 
 // Get validasi Haversine (jarak kunjungan vs radius valid)
 $haversineQuery = "SELECT
@@ -174,7 +210,7 @@ $overall = $overallResult['data']->fetch_assoc();
 
     <!-- Main Container -->
     <div class="container-fluid">
-        <h2 class="mb-3">Analisis Produktivitas & Akurasi GPS</h2>
+        <h2 class="mb-3">Analisis Produktivitas & Evaluasi Aktivitas Kerja</h2>
 
         <!-- Date Filter -->
         <div class="card mb-3">
@@ -185,7 +221,6 @@ $overall = $overallResult['data']->fetch_assoc();
                     <span>s/d</span>
                     <input type="date" name="end_date" class="form-control" value="<?php echo $end_date; ?>" style="width: auto;">
                     <button type="submit" class="btn btn-primary">Filter</button>
-                    <button type="button" class="btn btn-secondary" onclick="window.print()">Cetak Laporan</button>
                 </form>
             </div>
         </div>
@@ -206,74 +241,10 @@ $overall = $overallResult['data']->fetch_assoc();
             </div>
         </div>
 
-        <!-- Section 1: Analisis Akurasi GPS -->
+        <!-- Section 1: Validasi Haversine -->
         <div class="card">
             <div class="card-header">
-                <strong>1. Analisis Akurasi GPS Berdasarkan Kondisi Lingkungan</strong>
-            </div>
-            <div class="card-body">
-                <p><strong>Tujuan Analisis:</strong> Mengukur variasi akurasi GPS pada berbagai kondisi lingkungan untuk validasi sistem tracking.</p>
-
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Kondisi Lingkungan</th>
-                                <th>Total Readings</th>
-                                <th>Mean Accuracy (m)</th>
-                                <th>Min (m)</th>
-                                <th>Max (m)</th>
-                                <th>Std Dev (m)</th>
-                                <th>% Akurasi Baik (≤20m)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $chartLabels = [];
-                            $chartData = [];
-                            while ($gps = $gpsAccuracyResult['data']->fetch_assoc()):
-                                $chartLabels[] = ucfirst($gps['location_type']);
-                                $chartData[] = $gps['mean_accuracy'];
-                            ?>
-                                <tr>
-                                    <td><strong><?php echo ucfirst($gps['location_type']); ?></strong></td>
-                                    <td><?php echo number_format($gps['total_readings']); ?></td>
-                                    <td><?php echo $gps['mean_accuracy']; ?></td>
-                                    <td><?php echo $gps['min_accuracy']; ?></td>
-                                    <td><?php echo $gps['max_accuracy']; ?></td>
-                                    <td><?php echo $gps['std_dev']; ?></td>
-                                    <td>
-                                        <?php
-                                        $persen = $gps['persen_akurasi_baik'];
-                                        $class = $persen >= 70 ? 'text-success' : ($persen >= 50 ? 'text-warning' : 'text-danger');
-                                        echo "<span class='$class'><strong>{$persen}%</strong></span>";
-                                        ?>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div style="max-width: 600px; margin: 20px auto;">
-                    <canvas id="chartAccuracy"></canvas>
-                </div>
-
-                <div class="alert alert-info mt-3">
-                    <strong>Interpretasi:</strong>
-                    <ul>
-                        <li>Akurasi GPS <strong>outdoor</strong> umumnya lebih baik (mean accuracy lebih rendah)</li>
-                        <li>Akurasi GPS <strong>indoor</strong> lebih buruk karena lemahnya sinyal satelit</li>
-                        <li>Standar deviasi menunjukkan konsistensi akurasi GPS</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 2: Validasi Haversine -->
-        <div class="card">
-            <div class="card-header">
-                <strong>2. Validasi Metode Haversine untuk Verifikasi Kunjungan</strong>
+                <strong>1. Validasi Metode Haversine untuk Verifikasi Kunjungan</strong>
             </div>
             <div class="card-body">
                 <p><strong>Tujuan Analisis:</strong> Mengevaluasi efektivitas metode Haversine dalam menghitung jarak dan memvalidasi kehadiran admin di lokasi project.</p>
@@ -336,7 +307,7 @@ $overall = $overallResult['data']->fetch_assoc();
         <!-- Section 3: Evaluasi Produktivitas -->
         <div class="card">
             <div class="card-header">
-                <strong>3. Evaluasi Produktivitas Admin Lapangan</strong>
+                <strong>2. Evaluasi Produktivitas Admin Lapangan</strong>
             </div>
             <div class="card-body">
                 <p><strong>Tujuan Analisis:</strong> Mengevaluasi kinerja admin lapangan berdasarkan metrik jarak tempuh, jumlah kunjungan, dan efisiensi kerja.</p>
@@ -349,10 +320,10 @@ $overall = $overallResult['data']->fetch_assoc();
                                 <th>Hari Kerja</th>
                                 <th>Total Kunjungan</th>
                                 <th>Kunjungan Valid</th>
-                                <th>Total Jarak (km)</th>
+                                <th>Total Jarak Antar Site (km)</th>
                                 <th>Avg Efisiensi (kunjungan/jam)</th>
                                 <th>Success Rate (%)</th>
-                                <th>Avg Jarak/Kunjungan (km)</th>
+                                <th>Avg Jarak/Hari (km)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -371,7 +342,7 @@ $overall = $overallResult['data']->fetch_assoc();
                                         echo "<span class='$class'><strong>{$rate}%</strong></span>";
                                         ?>
                                     </td>
-                                    <td><?php echo $prod['avg_jarak_per_kunjungan']; ?></td>
+                                    <td><?php echo $prod['avg_jarak_per_hari']; ?></td>
                                 </tr>
                             <?php endwhile; ?>
                         </tbody>
@@ -383,65 +354,16 @@ $overall = $overallResult['data']->fetch_assoc();
                     <ul>
                         <li><strong>Efisiensi:</strong> Jumlah kunjungan per jam kerja (semakin tinggi = semakin produktif)</li>
                         <li><strong>Success Rate:</strong> Persentase kunjungan valid (≥80% = baik, 60-79% = cukup, <60% = perlu perbaikan)</li>
-                        <li><strong>Jarak per Kunjungan:</strong> Rata-rata jarak tempuh per kunjungan (indikator coverage area)</li>
+                        <li><strong>Avg Jarak/Hari:</strong> Rata-rata total jarak antar site per hari kerja (indikator coverage area harian)</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Section 4: Rekomendasi -->
-        <div class="card no-print">
-            <div class="card-header">
-                <strong>4. Rekomendasi & Tindak Lanjut</strong>
-            </div>
-            <div class="card-body">
-                <h4>Berdasarkan analisis data GPS dan produktivitas:</h4>
-                <ol>
-                    <li><strong>Akurasi GPS:</strong> Pastikan admin berada di area outdoor saat melakukan tracking untuk akurasi optimal</li>
-                    <li><strong>Validasi Kunjungan:</strong> Radius valid 50m sudah sesuai, namun perlu verifikasi manual untuk jarak 51-100m</li>
-                    <li><strong>Produktivitas:</strong> Admin dengan success rate <60% perlu coaching dan pelatihan</li>
-                    <li><strong>Efisiensi:</strong> Optimalkan rute kunjungan untuk meningkatkan jumlah kunjungan per jam</li>
-                </ol>
-            </div>
-        </div>
     </div>
 
     <!-- JavaScript Charts -->
     <script>
-        // Chart Akurasi GPS
-        const ctxAccuracy = document.getElementById('chartAccuracy').getContext('2d');
-        new Chart(ctxAccuracy, {
-            type: 'bar',
-            data: {
-                labels: <?php echo json_encode($chartLabels); ?>,
-                datasets: [{
-                    label: 'Mean Accuracy (meter)',
-                    data: <?php echo json_encode($chartData); ?>,
-                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'],
-                    borderColor: ['#2563eb', '#059669', '#d97706', '#dc2626'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Akurasi GPS Berdasarkan Kondisi Lingkungan'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Akurasi (meter)'
-                        }
-                    }
-                }
-            }
-        });
-
         // Chart Haversine
         const ctxHaversine = document.getElementById('chartHaversine').getContext('2d');
         new Chart(ctxHaversine, {

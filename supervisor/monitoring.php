@@ -134,6 +134,67 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
             #admin-status-list tr {
                 cursor: pointer;
             }
+
+            /* Custom Photo Marker */
+            .photo-marker {
+                position: relative;
+                width: 46px;
+                height: 56px;
+            }
+            .photo-marker-pin {
+                width: 46px;
+                height: 56px;
+                position: relative;
+            }
+            .photo-marker-pin svg {
+                width: 46px;
+                height: 56px;
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            }
+            .photo-marker-img {
+                position: absolute;
+                top: 4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid white;
+            }
+            .photo-marker-initials {
+                position: absolute;
+                top: 4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                background: #3b82f6;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 13px;
+                font-weight: 700;
+                border: 2px solid white;
+            }
+            .photo-marker-pulse {
+                position: absolute;
+                bottom: -2px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 10px;
+                height: 10px;
+                background: #22c55e;
+                border-radius: 50%;
+                border: 2px solid white;
+                animation: markerPulse 2s infinite;
+            }
+            @keyframes markerPulse {
+                0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+                50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            }
         </style>
 
         <!-- Admin Status List -->
@@ -164,11 +225,15 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
             <div class="card-header">Keterangan</div>
             <div class="card-body">
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-                    <div>
-                        <strong>Marker Biru:</strong> Posisi Admin Lapangan (Online)
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="position:relative;width:30px;height:36px;flex-shrink:0;">
+                            <svg viewBox="0 0 46 56" width="30" height="36"><path d="M23 0 C10.3 0 0 10.3 0 23 C0 35.7 23 56 23 56 C23 56 46 35.7 46 23 C46 10.3 35.7 0 23 0 Z" fill="#3b82f6"/><circle cx="23" cy="21" r="16" fill="white"/></svg>
+                        </div>
+                        <span><strong>Foto Profil Admin:</strong> Posisi Admin (Online)</span>
                     </div>
-                    <div>
-                        <strong>Marker Merah + Lingkaran:</strong> Lokasi Project + Radius Valid
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png" style="height:28px;flex-shrink:0;">
+                        <span><strong>Marker Merah + Lingkaran:</strong> Lokasi Project + Radius Valid</span>
                     </div>
                 </div>
             </div>
@@ -187,6 +252,81 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
         let adminMarkers = {};
         let adminCircles = [];
         let projectMarkers = [];
+
+        // Supervisor location
+        let myLat = null;
+        let myLng = null;
+
+        // Get supervisor's current location
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(
+                function(pos) {
+                    myLat = pos.coords.latitude;
+                    myLng = pos.coords.longitude;
+                },
+                function(err) { console.log('Geolocation error:', err.message); },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+            );
+        }
+
+        // Haversine formula - distance in meters
+        function haversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371000;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        // Road factor: jalan nyata biasanya 1.5x lebih jauh dari garis lurus (koreksi Haversine untuk Pulau Jawa)
+        const ROAD_FACTOR = 1.5;
+
+        // Format distance (sudah dikoreksi dengan road factor)
+        function formatDistance(meters) {
+            const roadMeters = meters * ROAD_FACTOR;
+            if (roadMeters < 1000) return Math.round(roadMeters) + ' m';
+            return (roadMeters / 1000).toFixed(1) + ' km';
+        }
+
+        // Estimate travel time with road distance correction
+        function estimateTime(meters) {
+            const roadDistance = meters * ROAD_FACTOR;
+
+            // Kecepatan rata-rata berdasarkan jarak (kota Jakarta)
+            const distKm = roadDistance / 1000;
+            let avgSpeedKmh;
+            if (distKm < 5) avgSpeedKmh = 20;
+            else if (distKm < 15) avgSpeedKmh = 25;
+            else avgSpeedKmh = 30;
+
+            const minutes = distKm / avgSpeedKmh * 60;
+            if (minutes < 1) return '< 1 menit';
+            if (minutes < 60) return Math.round(minutes) + ' menit';
+            const hours = Math.floor(minutes / 60);
+            const mins = Math.round(minutes % 60);
+            return hours + ' jam ' + mins + ' menit';
+        }
+
+        // Get distance info HTML between supervisor and admin
+        function getDistanceInfo(adminLat, adminLng) {
+            if (myLat === null || myLng === null) return { html: '', distance: null, time: '' };
+            const dist = haversineDistance(myLat, myLng, adminLat, adminLng);
+            const time = estimateTime(dist);
+            return {
+                html: `<div style="margin-top:6px;padding:6px 8px;background:#f0fdf4;border-radius:6px;border:1px solid #bbf7d0;clear:both;">
+                    <span style="font-size:12px;color:#15803d;">
+                        <strong>Jarak dari Anda:</strong> ${formatDistance(dist)}<br>
+                        <strong>Estimasi waktu:</strong> ~${time}
+                    </span>
+                </div>`,
+                distance: dist,
+                time: time,
+                formatted: formatDistance(dist)
+            };
+        }
 
         // Add project locations to map
         const projects = <?php echo json_encode($projects); ?>;
@@ -243,6 +383,46 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
                 });
         }
 
+        // Create photo marker icon
+        function createPhotoIcon(admin) {
+            // Get initials
+            const nameParts = admin.nama.split(' ');
+            let initials = nameParts[0].charAt(0).toUpperCase();
+            if (nameParts.length > 1) {
+                initials += nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+            }
+
+            // Photo or initials
+            let innerHtml = '';
+            if (admin.foto_profil) {
+                innerHtml = `<img class="photo-marker-img" src="../uploads/profile/${admin.foto_profil}" alt="${admin.nama}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                             <div class="photo-marker-initials" style="display:none;">${initials}</div>`;
+            } else {
+                innerHtml = `<div class="photo-marker-initials">${initials}</div>`;
+            }
+
+            const html = `
+                <div class="photo-marker">
+                    <div class="photo-marker-pin">
+                        <svg viewBox="0 0 46 56" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M23 0 C10.3 0 0 10.3 0 23 C0 35.7 23 56 23 56 C23 56 46 35.7 46 23 C46 10.3 35.7 0 23 0 Z" fill="#3b82f6"/>
+                            <circle cx="23" cy="21" r="19" fill="white"/>
+                        </svg>
+                        ${innerHtml}
+                    </div>
+                    <div class="photo-marker-pulse"></div>
+                </div>
+            `;
+
+            return L.divIcon({
+                html: html,
+                className: '',
+                iconSize: [46, 56],
+                iconAnchor: [23, 56],
+                popupAnchor: [0, -50]
+            });
+        }
+
         function updateMap(admins) {
             // Remove existing admin markers
             Object.values(adminMarkers).forEach(marker => {
@@ -266,25 +446,28 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
                 const position = [admin.latitude, admin.longitude];
 
                 const marker = L.marker(position, {
-                    icon: L.icon({
-                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                        shadowSize: [41, 41]
-                    })
+                    icon: createPhotoIcon(admin)
                 }).addTo(map);
 
+                const fotoPopup = admin.foto_profil
+                    ? `<img src="../uploads/profile/${admin.foto_profil}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid #3b82f6;margin-right:10px;float:left;">`
+                    : '';
+
+                const distInfo = getDistanceInfo(admin.latitude, admin.longitude);
+
                 const popupContent = `
-                    <b>${admin.nama}</b><br>
-                    Status: <span style="color: green; font-weight: bold;">Online</span><br>
-                    Akurasi: ${admin.accuracy.toFixed(2)}m<br>
-                    Update: ${admin.minutes_ago} menit lalu<br>
-                    Signal: ${admin.signal_strength}<br>
-                    <a href="https://www.google.com/maps?q=${admin.latitude},${admin.longitude}" target="_blank" style="display:inline-block;margin-top:8px;padding:5px 10px;background:#10b981;color:white;border-radius:4px;text-decoration:none;font-size:12px;">
-                        📍 Buka di Google Maps
-                    </a>
+                    <div style="min-width: 220px;">
+                        ${fotoPopup}
+                        <b>${admin.nama}</b><br>
+                        Status: <span style="color: green; font-weight: bold;">Online</span><br>
+                        Akurasi: ${admin.accuracy.toFixed(2)}m<br>
+                        Update: ${admin.minutes_ago} menit lalu<br>
+                        Signal: ${admin.signal_strength}<br style="clear:both;">
+                        ${distInfo.html}
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${admin.latitude},${admin.longitude}" target="_blank" style="display:inline-block;margin-top:8px;padding:6px 12px;background:#10b981;color:white;border-radius:4px;text-decoration:none;font-size:12px;clear:both;width:100%;text-align:center;box-sizing:border-box;">
+                            Navigasi ke Lokasi
+                        </a>
+                    </div>
                 `;
 
                 marker.bindPopup(popupContent);
@@ -316,21 +499,37 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
             }
 
             let html = '<div class="table-responsive"><table><thead><tr>';
-            html += '<th>Nama</th><th>Status</th><th>Lokasi</th><th>Akurasi GPS</th><th>Update Terakhir</th><th>Aksi</th>';
+            html += '<th>Nama</th><th>Status</th><th>Jarak & Estimasi</th><th>Akurasi GPS</th><th>Update Terakhir</th><th>Aksi</th>';
             html += '</tr></thead><tbody>';
 
             onlineAdmins.forEach(admin => {
                 const accClass = admin.accuracy <= 20 ? 'text-success' : (admin.accuracy <= 50 ? 'text-warning' : 'text-danger');
 
+                // Get initials
+                const nameParts = admin.nama.split(' ');
+                let initials = nameParts[0].charAt(0).toUpperCase();
+                if (nameParts.length > 1) initials += nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+
+                const fotoHtml = admin.foto_profil
+                    ? `<img src="../uploads/profile/${admin.foto_profil}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid #3b82f6;" onerror="this.outerHTML='<div style=\\'width:32px;height:32px;border-radius:50%;background:#3b82f6;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;\\'>${initials}</div>'">`
+                    : `<div style="width:32px;height:32px;border-radius:50%;background:#3b82f6;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">${initials}</div>`;
+
+                // Distance & time estimate
+                const distInfo = getDistanceInfo(admin.latitude, admin.longitude);
+                let distHtml = '<small style="color:#999;">Lokasi Anda belum tersedia</small>';
+                if (distInfo.distance !== null) {
+                    distHtml = `<strong style="color:#15803d;">${distInfo.formatted}</strong><br><small style="color:#666;">~${distInfo.time}</small>`;
+                }
+
                 html += `<tr style="cursor: pointer;" onclick="focusOnAdmin(${admin.id}, ${admin.latitude}, ${admin.longitude})">
-                    <td>${admin.nama}</td>
+                    <td style="display:flex;align-items:center;gap:10px;">${fotoHtml} ${admin.nama}</td>
                     <td><span class="badge badge-success">Online</span></td>
-                    <td><small>${admin.latitude.toFixed(6)}, ${admin.longitude.toFixed(6)}</small></td>
+                    <td>${distHtml}</td>
                     <td><span class="${accClass}">${admin.accuracy.toFixed(2)} m</span></td>
                     <td>${admin.minutes_ago} menit lalu</td>
                     <td>
-                        <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); openGoogleMaps(${admin.latitude}, ${admin.longitude}, '${admin.nama}')" title="Buka di Google Maps">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 1.74.5 3.37 1.41 4.84.95 1.54 2.2 2.86 3.16 4.4.47.75.81 1.45 1.17 2.26.26.55.47 1.5 1.26 1.5s1-.95 1.26-1.5c.37-.81.7-1.51 1.17-2.26.96-1.53 2.21-2.85 3.16-4.4C18.5 12.37 19 10.74 19 9c0-3.87-3.13-7-7-7zm0 9.75c-1.52 0-2.75-1.23-2.75-2.75S10.48 6.25 12 6.25 14.75 7.48 14.75 9 13.52 11.75 12 11.75z"/></svg>
+                        <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); window.open('https://www.google.com/maps/dir/?api=1&destination=${admin.latitude},${admin.longitude}', '_blank')" title="Navigasi ke Lokasi">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
                         </button>
                     </td>
                 </tr>`;
