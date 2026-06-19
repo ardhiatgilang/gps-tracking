@@ -826,6 +826,24 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
         let selectedLat = null;
         let selectedLng = null;
 
+        // Reset project search
+        function resetProjectSearch() {
+            searchInput.value = '';
+            selectedProject.style.display = 'none';
+            selectedLat = null;
+            selectedLng = null;
+            projectItems.forEach(item => item.style.display = 'block');
+            projectList.style.display = 'block';
+            searchInput.focus();
+        }
+
+        // Klik search input saat project sudah dipilih → reset otomatis
+        searchInput.addEventListener('click', function() {
+            if (selectedProject.style.display !== 'none') {
+                resetProjectSearch();
+            }
+        });
+
         // Show list when typing
         searchInput.addEventListener('input', function() {
             const query = this.value.toLowerCase().trim();
