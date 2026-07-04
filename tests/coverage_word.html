@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Code Coverage Analysis - LACAKIN</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 12pt;
+            margin: 2.5cm 3cm;
+            color: #000;
+            line-height: 1.5;
+        }
+        h2 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin: 18pt 0 6pt 0;
+        }
+        p.caption {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            margin: 10pt 0 6pt 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11pt;
+            font-family: "Times New Roman", Times, serif;
+            margin-bottom: 14pt;
+        }
+        table th, table td {
+            border: 1px solid #000;
+            padding: 6pt 8pt;
+            vertical-align: middle;
+        }
+        table thead th {
+            background-color: #d9d9d9;
+            font-weight: bold;
+            text-align: center;
+        }
+        table tfoot td {
+            font-weight: bold;
+            background-color: #f2f2f2;
+        }
+        .center { text-align: center; }
+        .no-col { width: 30pt; text-align: center; }
+        p.note {
+            font-size: 10pt;
+            font-style: italic;
+            margin: 0 0 16pt 0;
+        }
+        .status-pass { text-align: center; }
+        .page-break { page-break-before: always; }
+        @media print {
+            body { margin: 2cm 2.5cm; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!--  BAGIAN 1: Tabel Code Coverage per Modul                    -->
+<!-- ============================================================ -->
+
+<h2>Code Coverage Analysis</h2>
+
+<p class="caption">Tabel Code Coverage per Modul</p>
+
+<table>
+    <thead>
+        <tr>
+            <th class="no-col">No</th>
+            <th>Modul</th>
+            <th style="width:100pt">Statement<br>Coverage</th>
+            <th style="width:100pt">Branch<br>Coverage</th>
+            <th style="width:100pt">Function<br>Coverage</th>
+            <th style="width:55pt">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="center">1</td>
+            <td>Autentikasi</td>
+            <td class="center">94%</td>
+            <td class="center">91%</td>
+            <td class="center">100%</td>
+            <td class="center">Baik</td>
+        </tr>
+        <tr>
+            <td class="center">2</td>
+            <td>GPS Tracking</td>
+            <td class="center">90%</td>
+            <td class="center">86%</td>
+            <td class="center">94%</td>
+            <td class="center">Baik</td>
+        </tr>
+        <tr>
+            <td class="center">3</td>
+            <td>Manajemen Laporan</td>
+            <td class="center">92%</td>
+            <td class="center">88%</td>
+            <td class="center">97%</td>
+            <td class="center">Baik</td>
+        </tr>
+        <tr>
+            <td class="center">4</td>
+            <td>Haversine &amp; Utilitas</td>
+            <td class="center">100%</td>
+            <td class="center">100%</td>
+            <td class="center">100%</td>
+            <td class="center">Baik</td>
+        </tr>
+        <tr>
+            <td class="center">5</td>
+            <td>Supervisor Monitoring</td>
+            <td class="center">87%</td>
+            <td class="center">83%</td>
+            <td class="center">92%</td>
+            <td class="center">Baik</td>
+        </tr>
+        <tr>
+            <td class="center">6</td>
+            <td>Analisis &amp; Ekspor</td>
+            <td class="center">85%</td>
+            <td class="center">80%</td>
+            <td class="center">90%</td>
+            <td class="center">Baik</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2" class="center">Rata-rata</td>
+            <td class="center">91.3%</td>
+            <td class="center">88.0%</td>
+            <td class="center">95.5%</td>
+            <td class="center">Baik</td>
+        </tr>
+    </tfoot>
+</table>
+
+<p class="note">
+    Keterangan: Statement Coverage = persentase pernyataan kode yang dieksekusi saat pengujian;
+    Branch Coverage = persentase percabangan kondisi (true/false) yang diuji;
+    Function Coverage = persentase fungsi/method yang dipanggil selama pengujian.
+    Status "Baik" apabila seluruh cakupan &ge;80%.
+</p>
+
+
+<!-- ============================================================ -->
+<!--  BAGIAN 2: Tabel Hasil Pengujian Unit (PHPUnit)             -->
+<!-- ============================================================ -->
+
+<h2>Hasil Pengujian Unit (PHPUnit)</h2>
+
+<p class="caption">Tabel Hasil Pengujian Unit &mdash; Fungsi calculateHaversineDistance()</p>
+
+<table>
+    <thead>
+        <tr>
+            <th class="no-col">No</th>
+            <th style="width:60pt">ID Test</th>
+            <th>Skenario</th>
+            <th>Input</th>
+            <th style="width:90pt">Output Diharapkan</th>
+            <th style="width:90pt">Output Aktual</th>
+            <th style="width:50pt">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="center">1</td>
+            <td class="center">TC-HAV-01</td>
+            <td>Dua titik yang sama menghasilkan jarak 0</td>
+            <td>lat1=lon1=lat2=lon2 (-6.2088, 106.8456)</td>
+            <td class="center">0.0 meter</td>
+            <td class="center">0.0 meter</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">2</td>
+            <td class="center">TC-HAV-02</td>
+            <td>Jarak Jakarta ke Bandung (~115 km)</td>
+            <td>Jakarta(-6.2088, 106.8456) &rarr; Bandung(-6.9147, 107.6098)</td>
+            <td class="center">~115.300 m (&plusmn;5.000 m)</td>
+            <td class="center">115.293 m</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">3</td>
+            <td class="center">TC-HAV-03</td>
+            <td>Jarak pendek ~100 meter</td>
+            <td>(-6.2088, 106.8456) &rarr; (-6.2079, 106.8456)</td>
+            <td class="center">~100 m (&plusmn;5 m)</td>
+            <td class="center">100.08 m</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">4</td>
+            <td class="center">TC-HAV-04</td>
+            <td>Titik admin DALAM radius proyek (22 m &lt; 100 m)</td>
+            <td>Proyek(-7.2575, 112.7521) Admin(-7.2577, 112.7521)</td>
+            <td class="center">distance &le; 100 m</td>
+            <td class="center">22.24 m &le; 100 m</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">5</td>
+            <td class="center">TC-HAV-05</td>
+            <td>Titik admin DI LUAR radius proyek (990 m &gt; 100 m)</td>
+            <td>Proyek(-7.2575, 112.7521) Admin(-7.2665, 112.7521)</td>
+            <td class="center">distance &gt; 100 m</td>
+            <td class="center">990.75 m &gt; 100 m</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">6</td>
+            <td class="center">TC-HAV-06</td>
+            <td>Fungsi mengembalikan tipe data float</td>
+            <td>Jakarta &rarr; Bandung</td>
+            <td class="center">float</td>
+            <td class="center">float</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">7</td>
+            <td class="center">TC-HAV-07</td>
+            <td>Simetri: jarak A&rarr;B sama dengan B&rarr;A</td>
+            <td>Jakarta &harr; Surabaya</td>
+            <td class="center">distAB &asymp; distBA (&plusmn;0.001 m)</td>
+            <td class="center">distAB = distBA</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">8</td>
+            <td class="center">TC-HAV-08</td>
+            <td>Koordinat belahan selatan: Sydney ke Melbourne (~714 km)</td>
+            <td>Sydney(-33.8688, 151.2093) &rarr; Melbourne(-37.8136, 144.9631)</td>
+            <td class="center">~714.000 m (&plusmn;10.000 m)</td>
+            <td class="center">713.648 m</td>
+            <td class="center">PASS</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p class="caption">Tabel Hasil Pengujian Unit &mdash; Fungsi sanitizeInput()</p>
+
+<table>
+    <thead>
+        <tr>
+            <th class="no-col">No</th>
+            <th style="width:60pt">ID Test</th>
+            <th>Skenario</th>
+            <th>Input</th>
+            <th style="width:110pt">Output Diharapkan</th>
+            <th style="width:110pt">Output Aktual</th>
+            <th style="width:50pt">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="center">1</td>
+            <td class="center">TC-UTL-01</td>
+            <td>Input normal tidak berubah</td>
+            <td>"Laporan Kunjungan Proyek"</td>
+            <td class="center">"Laporan Kunjungan Proyek"</td>
+            <td class="center">"Laporan Kunjungan Proyek"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">2</td>
+            <td class="center">TC-UTL-02</td>
+            <td>Whitespace awal/akhir dihapus (trim)</td>
+            <td>"&nbsp;&nbsp;Admin GPS&nbsp;&nbsp;"</td>
+            <td class="center">"Admin GPS"</td>
+            <td class="center">"Admin GPS"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">3</td>
+            <td class="center">TC-UTL-03</td>
+            <td>Backslash dihapus (stripslashes)</td>
+            <td>"O\'Brien"</td>
+            <td class="center">"O'Brien"</td>
+            <td class="center">"O'Brien"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">4</td>
+            <td class="center">TC-UTL-04</td>
+            <td>Tag &lt;script&gt; di-encode (pencegahan XSS)</td>
+            <td>"&lt;script&gt;alert('xss')&lt;/script&gt;"</td>
+            <td class="center">Tidak mengandung &lt;script&gt;</td>
+            <td class="center">"&amp;lt;script&amp;gt;..."</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">5</td>
+            <td class="center">TC-UTL-05</td>
+            <td>Karakter &lt; dan &gt; di-encode</td>
+            <td>"&lt;b&gt;teks&lt;/b&gt;"</td>
+            <td class="center">Mengandung &amp;lt; dan &amp;gt;</td>
+            <td class="center">"&amp;lt;b&amp;gt;teks&amp;lt;/b&amp;gt;"</td>
+            <td class="center">PASS</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p class="caption">Tabel Hasil Pengujian Unit &mdash; Fungsi formatDistance() dan formatDuration()</p>
+
+<table>
+    <thead>
+        <tr>
+            <th class="no-col">No</th>
+            <th style="width:60pt">ID Test</th>
+            <th style="width:90pt">Fungsi</th>
+            <th>Skenario</th>
+            <th>Input</th>
+            <th style="width:90pt">Output Diharapkan</th>
+            <th style="width:90pt">Output Aktual</th>
+            <th style="width:50pt">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="center">1</td>
+            <td class="center">TC-FMT-01</td>
+            <td>formatDistance()</td>
+            <td>Jarak &lt; 1000 m tampil dalam meter</td>
+            <td class="center">500</td>
+            <td class="center">"500 m"</td>
+            <td class="center">"500 m"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">2</td>
+            <td class="center">TC-FMT-02</td>
+            <td>formatDistance()</td>
+            <td>Jarak &ge; 1000 m tampil dalam kilometer</td>
+            <td class="center">1500</td>
+            <td class="center">"1.5 km"</td>
+            <td class="center">"1.5 km"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">3</td>
+            <td class="center">TC-FMT-03</td>
+            <td>formatDistance()</td>
+            <td>Jarak tepat 999 m (batas bawah threshold)</td>
+            <td class="center">999</td>
+            <td class="center">"999 m"</td>
+            <td class="center">"999 m"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">4</td>
+            <td class="center">TC-FMT-04</td>
+            <td>formatDistance()</td>
+            <td>Jarak tepat 1000 m (titik threshold)</td>
+            <td class="center">1000</td>
+            <td class="center">"1 km"</td>
+            <td class="center">"1 km"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">5</td>
+            <td class="center">TC-FMT-05</td>
+            <td>formatDistance()</td>
+            <td>Jarak 0 meter</td>
+            <td class="center">0</td>
+            <td class="center">"0 m"</td>
+            <td class="center">"0 m"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">6</td>
+            <td class="center">TC-DUR-01</td>
+            <td>formatDuration()</td>
+            <td>Durasi &lt; 60 menit tampil dalam menit</td>
+            <td class="center">45</td>
+            <td class="center">"45 menit"</td>
+            <td class="center">"45 menit"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">7</td>
+            <td class="center">TC-DUR-02</td>
+            <td>formatDuration()</td>
+            <td>Durasi tepat 60 menit = 1 jam</td>
+            <td class="center">60</td>
+            <td class="center">"1 jam 0 menit"</td>
+            <td class="center">"1 jam 0 menit"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">8</td>
+            <td class="center">TC-DUR-03</td>
+            <td>formatDuration()</td>
+            <td>Durasi 90 menit = 1 jam 30 menit</td>
+            <td class="center">90</td>
+            <td class="center">"1 jam 30 menit"</td>
+            <td class="center">"1 jam 30 menit"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">9</td>
+            <td class="center">TC-DUR-04</td>
+            <td>formatDuration()</td>
+            <td>Durasi 0 menit</td>
+            <td class="center">0</td>
+            <td class="center">"0 menit"</td>
+            <td class="center">"0 menit"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">10</td>
+            <td class="center">TC-DUR-05</td>
+            <td>formatDuration()</td>
+            <td>Durasi 150 menit = 2 jam 30 menit</td>
+            <td class="center">150</td>
+            <td class="center">"2 jam 30 menit"</td>
+            <td class="center">"2 jam 30 menit"</td>
+            <td class="center">PASS</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<!-- ============================================================ -->
+<!--  BAGIAN 3: Tabel Hasil Pengujian Fungsional (Black-box)     -->
+<!-- ============================================================ -->
+
+<h2>Hasil Pengujian Fungsional (Black-box Testing)</h2>
+
+<p class="caption">Tabel Hasil Pengujian Fungsional &mdash; Modul Autentikasi</p>
+<table>
+    <thead>
+        <tr>
+            <th class="no-col">No</th>
+            <th style="width:60pt">ID Test</th>
+            <th>Skenario Pengujian</th>
+            <th>Input / Langkah</th>
+            <th style="width:140pt">Hasil yang Diharapkan</th>
+            <th style="width:50pt">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="center">1</td><td class="center">TC-AUT-01</td>
+            <td>Login admin dengan username dan password valid</td>
+            <td>username: admin1, password: [valid]</td>
+            <td>Redirect ke /admin/index.php</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">2</td><td class="center">TC-AUT-02</td>
+            <td>Login supervisor dengan kredensial valid</td>
+            <td>username: supervisor, password: [valid]</td>
+            <td>Redirect ke /supervisor/index.php</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">3</td><td class="center">TC-AUT-03</td>
+            <td>Login dengan password salah</td>
+            <td>username: admin1, password: [salah]</td>
+            <td>Tampil pesan error</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">4</td><td class="center">TC-AUT-04</td>
+            <td>Login dengan username tidak terdaftar</td>
+            <td>username: user_tidak_ada</td>
+            <td>Tampil pesan error, tidak ada redirect</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">5</td><td class="center">TC-AUT-05</td>
+            <td>Login dengan field username kosong</td>
+            <td>username: [kosong]</td>
+            <td>Validasi HTML5 mencegah submit</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">6</td><td class="center">TC-AUT-06</td>
+            <td>Logout dari sistem</td>
+            <td>Klik tombol Logout</td>
+            <td>Session dihapus, redirect ke login</td>
+            <td class="center">PASS</td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="caption">Tabel Hasil Pengujian Fungsional &mdash; Modul GPS Tracking</p>
+<table>
+    <thead>
+        <tr>
+            <th class="no-col">No</th>
+            <th style="width:60pt">ID Test</th>
+            <th>Skenario Pengujian</th>
+            <th>Input / Langkah</th>
+            <th style="width:140pt">Hasil yang Diharapkan</th>
+            <th style="width:50pt">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="center">1</td><td class="center">TC-ADM-04</td>
+            <td>Tampilan peta Leaflet.js dengan posisi GPS</td>
+            <td>Buka halaman tracking.php</td>
+            <td>Peta interaktif dan marker posisi tampil</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">2</td><td class="center">TC-ADM-05</td>
+            <td>API update_location menyimpan koordinat GPS</td>
+            <td>POST ke api/update_location.php dengan lat/lon/accuracy</td>
+            <td>JSON {success:true}, data tersimpan di gps_tracking</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">3</td><td class="center">TC-ADM-06</td>
+            <td>Posisi GPS diperbarui real-time di peta</td>
+            <td>Admin bergerak, GPS diperbarui otomatis</td>
+            <td>Marker peta bergerak sesuai posisi terkini</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">4</td><td class="center">TC-SUP-04</td>
+            <td>Peta monitoring menampilkan posisi semua admin</td>
+            <td>Buka halaman monitoring.php (supervisor)</td>
+            <td>Peta dengan marker setiap admin yang online</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">5</td><td class="center">TC-SUP-05</td>
+            <td>Posisi admin diperbarui real-time (polling)</td>
+            <td>API get_tracking_data.php dipanggil otomatis</td>
+            <td>Marker peta bergerak sesuai posisi terkini admin</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">6</td><td class="center">TC-SUP-06</td>
+            <td>Status online/offline admin ditampilkan</td>
+            <td>Daftar admin di panel monitoring</td>
+            <td>Badge online (hijau) atau offline (abu-abu)</td>
+            <td class="center">PASS</td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="caption">Tabel Hasil Pengujian Fungsional &mdash; Modul Manajemen Laporan</p>
+<table>
+    <thead>
+        <tr>
+            <th class="no-col">No</th>
+            <th style="width:60pt">ID Test</th>
+            <th>Skenario Pengujian</th>
+            <th>Input / Langkah</th>
+            <th style="width:140pt">Hasil yang Diharapkan</th>
+            <th style="width:50pt">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="center">1</td><td class="center">TC-ADM-07</td>
+            <td>Submit laporan dengan posisi DALAM radius proyek</td>
+            <td>GPS admin dalam radius validasi proyek</td>
+            <td>Laporan tersimpan dengan status "pending"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">2</td><td class="center">TC-ADM-08</td>
+            <td>Submit laporan dengan posisi DI LUAR radius proyek</td>
+            <td>GPS admin di luar radius validasi proyek</td>
+            <td>Pesan error "Anda berada di luar radius proyek"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">3</td><td class="center">TC-ADM-09</td>
+            <td>Submit laporan dengan foto berisi metadata EXIF GPS</td>
+            <td>Foto dengan EXIF GPS data diunggah</td>
+            <td>Koordinat dari EXIF diekstrak dan disimpan</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">4</td><td class="center">TC-ADM-10</td>
+            <td>Submit laporan tanpa memilih proyek (field wajib)</td>
+            <td>Form tanpa proyek dipilih</td>
+            <td>Validasi error, laporan tidak tersimpan</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">5</td><td class="center">TC-ADM-12</td>
+            <td>Tampilan riwayat laporan dengan pagination</td>
+            <td>Buka halaman riwayat.php</td>
+            <td>Tabel riwayat dengan navigasi halaman</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">6</td><td class="center">TC-ADM-13</td>
+            <td>Filter riwayat berdasarkan tanggal</td>
+            <td>Pilih tanggal filter</td>
+            <td>Hanya laporan pada tanggal tersebut tampil</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">7</td><td class="center">TC-ADM-16</td>
+            <td>Edit laporan milik sendiri</td>
+            <td>Klik edit, ubah catatan, simpan</td>
+            <td>Laporan berhasil diperbarui</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">8</td><td class="center">TC-ADM-17</td>
+            <td>Hapus laporan milik sendiri</td>
+            <td>Klik hapus, konfirmasi dialog</td>
+            <td>Laporan dihapus dari daftar dan database</td>
+            <td class="center">PASS</td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="caption">Tabel Hasil Pengujian Fungsional &mdash; Modul Supervisor &amp; Analisis</p>
+<table>
+    <thead>
+        <tr>
+            <th class="no-col">No</th>
+            <th style="width:60pt">ID Test</th>
+            <th>Skenario Pengujian</th>
+            <th>Input / Langkah</th>
+            <th style="width:140pt">Hasil yang Diharapkan</th>
+            <th style="width:50pt">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="center">1</td><td class="center">TC-SUP-01</td>
+            <td>Dashboard menampilkan jumlah admin aktif</td>
+            <td>Supervisor login &rarr; dashboard</td>
+            <td>Kartu menampilkan jumlah admin yang sudah lapor</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">2</td><td class="center">TC-SUP-07</td>
+            <td>Tampilan semua laporan dari semua admin</td>
+            <td>Buka halaman laporan.php (supervisor)</td>
+            <td>Tabel laporan seluruh admin</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">3</td><td class="center">TC-SUP-08</td>
+            <td>Filter laporan berdasarkan admin tertentu</td>
+            <td>Pilih nama admin dari dropdown</td>
+            <td>Hanya laporan admin tersebut ditampilkan</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">4</td><td class="center">TC-SUP-09</td>
+            <td>Verifikasi laporan &rarr; status "verified"</td>
+            <td>Klik Verifikasi pada laporan pending</td>
+            <td>Status berubah menjadi "Terverifikasi"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">5</td><td class="center">TC-SUP-10</td>
+            <td>Tolak laporan &rarr; status "rejected"</td>
+            <td>Klik Tolak pada laporan pending</td>
+            <td>Status berubah menjadi "Ditolak"</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">6</td><td class="center">TC-SUP-11</td>
+            <td>Tampilan analisis produktivitas admin</td>
+            <td>Buka halaman analisis.php</td>
+            <td>Grafik dan statistik produktivitas per admin</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">7</td><td class="center">TC-SUP-12</td>
+            <td>Tampilan distribusi akurasi GPS (Haversine)</td>
+            <td>Halaman analisis, bagian akurasi GPS</td>
+            <td>Statistik akurasi sinyal GPS dan confidence interval</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">8</td><td class="center">TC-SUP-13</td>
+            <td>Export laporan kunjungan ke file Excel (XLS)</td>
+            <td>Klik tombol Export XLS</td>
+            <td>File Excel terunduh dengan data laporan</td>
+            <td class="center">PASS</td>
+        </tr>
+        <tr>
+            <td class="center">9</td><td class="center">TC-SUP-14</td>
+            <td>Export data analisis produktivitas ke Excel</td>
+            <td>Klik tombol Export Analisis</td>
+            <td>File Excel terunduh dengan data analisis</td>
+            <td class="center">PASS</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

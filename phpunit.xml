@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache"
+         stopOnFailure="false">
+
+    <testsuites>
+        <testsuite name="LACAKIN Unit Tests">
+            <directory>tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+
+    <source>
+        <include>
+            <directory suffix=".php">config</directory>
+        </include>
+        <exclude>
+            <file>config/database.example.php</file>
+        </exclude>
+    </source>
+
+    <coverage>
+        <report>
+            <html outputDirectory="tests/coverage-report"/>
+            <text outputFile="tests/coverage.txt"/>
+            <clover outputFile="tests/coverage.xml"/>
+        </report>
+    </coverage>
+
+</phpunit>

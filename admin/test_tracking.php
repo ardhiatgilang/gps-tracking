@@ -11,7 +11,10 @@ $testData = [
     'latitude' => -6.366579,
     'longitude' => 106.772236,
     'accuracy' => 15.5,
-    'altitude' => 100,
+    'altitude' => 
+    
+    
+    100,
     'speed' => 0,
     'heading' => 0,
     'timestamp' => date('Y-m-d H:i:s'),
