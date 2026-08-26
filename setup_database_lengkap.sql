@@ -162,6 +162,19 @@ CREATE TABLE tracking_sessions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
+-- TABEL 8: OFFICE LOCATION (titik koordinat kantor pusat, single row)
+-- ============================================================
+CREATE TABLE office_location (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nama_kantor VARCHAR(100) NOT NULL DEFAULT 'Kantor Pusat',
+    alamat TEXT,
+    latitude DECIMAL(10, 8) NOT NULL,
+    longitude DECIMAL(11, 8) NOT NULL,
+    radius_valid INT DEFAULT 100 COMMENT 'Radius validasi dari kantor dalam meter',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ============================================================
 -- INSERT DATA USERS
 -- Password untuk semua user: password123
 -- ============================================================
@@ -172,6 +185,13 @@ INSERT INTO users (username, password, nama_lengkap, email, no_hp, role) VALUES
 ('admin4', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin Lapangan 4', 'admin4@example.com', '081234567804', 'admin'),
 ('admin5', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin Lapangan 5', 'admin5@example.com', '081234567805', 'admin'),
 ('supervisor', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Supervisor Utama', 'supervisor@example.com', '081234567890', 'supervisor');
+
+-- ============================================================
+-- INSERT DATA OFFICE LOCATION
+-- PENTING: Sesuaikan koordinat ini dengan lokasi kantor REAL Anda!
+-- ============================================================
+INSERT INTO office_location (nama_kantor, alamat, latitude, longitude, radius_valid) VALUES
+('Kantor Pusat', 'Jakarta Mori Tower, Jl. Jend. Sudirman No.40-41 19th floor, RT.14/RW.1, Bend. Hilir, Kecamatan Tanah Abang, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10210', -6.21545, 106.81732, 100);
 
 -- ============================================================
 -- INSERT DATA PROJECT LOCATIONS

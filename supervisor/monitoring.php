@@ -16,6 +16,9 @@ $projects = [];
 while ($project = $projectsResult['data']->fetch_assoc()) {
     $projects[] = $project;
 }
+
+// Get office (central point) location
+$office = getOfficeLocation();
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -235,6 +238,10 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
                         <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png" style="height:28px;flex-shrink:0;">
                         <span><strong>Marker Merah + Lingkaran:</strong> Lokasi Project + Radius Valid</span>
                     </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" style="height:28px;flex-shrink:0;">
+                        <span><strong>Marker Hijau + Lingkaran:</strong> Kantor Pusat (Central Point) + Radius Valid</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -326,6 +333,42 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
                 time: time,
                 formatted: formatDistance(dist)
             };
+        }
+
+        // Add office (central point) location to map
+        const office = <?php echo json_encode($office); ?>;
+
+        if (office) {
+            const officeLat = parseFloat(office.latitude);
+            const officeLng = parseFloat(office.longitude);
+            const officeRadius = parseInt(office.radius_valid);
+
+            const officeMarker = L.marker([officeLat, officeLng], {
+                icon: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                })
+            }).addTo(map);
+
+            officeMarker.bindPopup(`
+                <b>${office.nama_kantor}</b><br>
+                ${office.alamat || ''}<br>
+                Radius: ${officeRadius}m<br>
+                <a href="https://www.google.com/maps?q=${officeLat},${officeLng}" target="_blank" style="display:inline-block;margin-top:8px;padding:5px 10px;background:#10b981;color:white;border-radius:4px;text-decoration:none;font-size:12px;">
+                    📍 Buka di Google Maps
+                </a>
+            `);
+
+            L.circle([officeLat, officeLng], {
+                radius: officeRadius,
+                color: '#10b981',
+                fillColor: '#10b981',
+                fillOpacity: 0.1
+            }).addTo(map);
         }
 
         // Add project locations to map
@@ -455,6 +498,20 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
 
                 const distInfo = getDistanceInfo(admin.latitude, admin.longitude);
 
+                let kantorHtml = '';
+                if (admin.jarak_dari_kantor !== null && admin.jarak_dari_kantor !== undefined) {
+                    const kantorLabel = admin.jarak_dari_kantor >= 1000
+                        ? (admin.jarak_dari_kantor / 1000).toFixed(2) + ' km'
+                        : admin.jarak_dari_kantor.toFixed(2) + ' m';
+                    const kantorColor = admin.dalam_radius_kantor ? '#15803d' : '#334155';
+                    kantorHtml = `<div style="margin-top:6px;padding:6px 8px;background:#f0f9ff;border-radius:6px;border:1px solid #bae6fd;clear:both;">
+                        <span style="font-size:12px;color:${kantorColor};">
+                            <strong>Jarak dari Kantor:</strong> ${kantorLabel}
+                            ${admin.dalam_radius_kantor ? ' <span class="badge badge-success" style="font-size:10px;">Di Kantor</span>' : ''}
+                        </span>
+                    </div>`;
+                }
+
                 const popupContent = `
                     <div style="min-width: 220px;">
                         ${fotoPopup}
@@ -463,6 +520,7 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
                         Akurasi: ${admin.accuracy.toFixed(2)}m<br>
                         Update: ${admin.minutes_ago} menit lalu<br>
                         Signal: ${admin.signal_strength}<br style="clear:both;">
+                        ${kantorHtml}
                         ${distInfo.html}
                         <a href="https://www.google.com/maps/dir/?api=1&destination=${admin.latitude},${admin.longitude}" target="_blank" style="display:inline-block;margin-top:8px;padding:6px 12px;background:#10b981;color:white;border-radius:4px;text-decoration:none;font-size:12px;clear:both;width:100%;text-align:center;box-sizing:border-box;">
                             Navigasi ke Lokasi
@@ -499,11 +557,21 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
             }
 
             let html = '<div class="table-responsive"><table><thead><tr>';
-            html += '<th>Nama</th><th>Status</th><th>Jarak & Estimasi</th><th>Akurasi GPS</th><th>Update Terakhir</th><th>Aksi</th>';
+            html += '<th>Nama</th><th>Status</th><th>Jarak & Estimasi</th><th>Jarak dari Kantor</th><th>Akurasi GPS</th><th>Update Terakhir</th><th>Aksi</th>';
             html += '</tr></thead><tbody>';
 
             onlineAdmins.forEach(admin => {
                 const accClass = admin.accuracy <= 20 ? 'text-success' : (admin.accuracy <= 50 ? 'text-warning' : 'text-danger');
+
+                let jarakKantorHtml = '<small style="color:#999;">-</small>';
+                if (admin.jarak_dari_kantor !== null && admin.jarak_dari_kantor !== undefined) {
+                    const jarakClass = admin.dalam_radius_kantor ? 'text-success' : 'text-secondary';
+                    const jarakLabel = admin.jarak_dari_kantor >= 1000
+                        ? (admin.jarak_dari_kantor / 1000).toFixed(2) + ' km'
+                        : admin.jarak_dari_kantor.toFixed(2) + ' m';
+                    jarakKantorHtml = `<strong class="${jarakClass}">${jarakLabel}</strong>` +
+                        (admin.dalam_radius_kantor ? '<br><span class="badge badge-success">Di Kantor</span>' : '');
+                }
 
                 // Get initials
                 const nameParts = admin.nama.split(' ');
@@ -525,6 +593,7 @@ while ($project = $projectsResult['data']->fetch_assoc()) {
                     <td style="display:flex;align-items:center;gap:10px;">${fotoHtml} ${admin.nama}</td>
                     <td><span class="badge badge-success">Online</span></td>
                     <td>${distHtml}</td>
+                    <td>${jarakKantorHtml}</td>
                     <td><span class="${accClass}">${admin.accuracy.toFixed(2)} m</span></td>
                     <td>${admin.minutes_ago} menit lalu</td>
                     <td>

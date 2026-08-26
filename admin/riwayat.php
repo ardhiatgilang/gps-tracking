@@ -53,7 +53,7 @@ $total = $countResult['data']->fetch_assoc()['total'];
 $totalPages = ceil($total / $limit);
 
 // Get reports with pagination
-$reportsQuery = "SELECT vr.*, pl.nama_project, pl.alamat
+$reportsQuery = "SELECT vr.*, pl.nama_project, pl.alamat, pl.radius_valid
                  FROM visit_reports vr
                  JOIN project_locations pl ON vr.project_id = pl.id
                  WHERE $whereClause
@@ -233,7 +233,7 @@ $projectsResult = executeQuery($projectsQuery, "i", [$user['id']]);
                                     <th>Project</th>
                                     <th>Lokasi</th>
                                     <th>Jarak</th>
-                                    <th>Akurasi GPS</th>
+                                    <th>Akurasi GPS (%)</th>
                                     <th>Status</th>
                                     <th>Foto</th>
                                     <th>Aksi</th>
@@ -266,9 +266,9 @@ $projectsResult = executeQuery($projectsQuery, "i", [$user['id']]);
                                         </td>
                                         <td>
                                             <?php
-                                            $acc = $report['accuracy'];
-                                            $accClass = $acc <= 20 ? 'text-success' : ($acc <= 50 ? 'text-warning' : 'text-danger');
-                                            echo "<span class='$accClass'>" . number_format($acc, 2) . " m</span>";
+                                            $akurasiPercent = calculateAccuracyPercent($report['jarak_dari_project'], $report['radius_valid']);
+                                            $accClass = $akurasiPercent >= 80 ? 'text-success' : ($akurasiPercent >= 50 ? 'text-warning' : 'text-danger');
+                                            echo "<span class='$accClass'>" . number_format($akurasiPercent, 1) . "%</span>";
                                             ?>
                                         </td>
                                         <td>

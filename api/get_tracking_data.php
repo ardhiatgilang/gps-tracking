@@ -40,21 +40,41 @@ $query = "SELECT
 $result = executeQuery($query);
 
 if ($result['success']) {
+    $office = getOfficeLocation();
     $admins = [];
+
     while ($row = $result['data']->fetch_assoc()) {
+        $latitude = floatval($row['latitude']);
+        $longitude = floatval($row['longitude']);
+
+        $jarak_dari_kantor = null;
+        $dalam_radius_kantor = null;
+
+        if ($office && $row['latitude'] !== null && $row['longitude'] !== null) {
+            $jarak_dari_kantor = round(calculateHaversineDistance(
+                $latitude,
+                $longitude,
+                $office['latitude'],
+                $office['longitude']
+            ), 2);
+            $dalam_radius_kantor = $jarak_dari_kantor <= $office['radius_valid'];
+        }
+
         $admins[] = [
             'id' => $row['id'],
             'nama' => $row['nama_lengkap'],
             'no_hp' => $row['no_hp'],
             'foto_profil' => $row['foto_profil'],
-            'latitude' => floatval($row['latitude']),
-            'longitude' => floatval($row['longitude']),
+            'latitude' => $latitude,
+            'longitude' => $longitude,
             'accuracy' => floatval($row['accuracy']),
             'timestamp' => $row['timestamp'],
             'location_type' => $row['location_type'],
             'signal_strength' => $row['signal_strength'],
             'minutes_ago' => intval($row['menit_terakhir_update']),
-            'is_online' => intval($row['menit_terakhir_update']) <= 5
+            'is_online' => intval($row['menit_terakhir_update']) <= 5,
+            'jarak_dari_kantor' => $jarak_dari_kantor,
+            'dalam_radius_kantor' => $dalam_radius_kantor
         ];
     }
 

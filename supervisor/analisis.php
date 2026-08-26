@@ -2,9 +2,8 @@
 /**
  * Halaman Analisis Produktivitas
  * Menampilkan statistik deskriptif dan analisis data GPS untuk penelitian skripsi
- * - Analisis akurasi GPS
- * - Validasi metode Haversine
  * - Evaluasi produktivitas admin lapangan
+ * - Analisis jarak admin dari kantor pusat
  */
 
 require_once '../config/database.php';
@@ -46,8 +45,8 @@ $produktivitasQuery = "SELECT
                             WHERE a.admin_id = u.id
                             AND DATE(a.waktu_kunjungan) BETWEEN ? AND ?
                         ), 0), 2) as total_jarak,
-                        ROUND(AVG(ds.efisiensi_score), 2) as avg_efisiensi,
-                        ROUND(AVG(ds.success_rate), 2) as avg_success_rate,
+                        ROUND(AVG(ds.avg_efisiensi_score), 2) as avg_efisiensi,
+                        ROUND(AVG(ds.avg_success_rate_score), 2) as avg_success_rate,
                         ROUND(COALESCE((
                             SELECT SUM(
                                 6371 * 2 * ASIN(SQRT(
@@ -72,7 +71,14 @@ $produktivitasQuery = "SELECT
                         ), 0), 2) as avg_jarak_per_hari
                        FROM visit_reports vr
                        JOIN users u ON vr.admin_id = u.id
-                       LEFT JOIN daily_summary ds ON ds.admin_id = u.id AND ds.tanggal BETWEEN ? AND ?
+                       LEFT JOIN (
+                           SELECT admin_id,
+                                  AVG(efisiensi_score) as avg_efisiensi_score,
+                                  AVG(success_rate) as avg_success_rate_score
+                           FROM daily_summary
+                           WHERE tanggal BETWEEN ? AND ?
+                           GROUP BY admin_id
+                       ) ds ON ds.admin_id = u.id
                        WHERE DATE(vr.waktu_kunjungan) BETWEEN ? AND ?
                        GROUP BY u.id, u.nama_lengkap
                        ORDER BY total_kunjungan DESC";
@@ -83,31 +89,54 @@ $produktivitasResult = executeQuery($produktivitasQuery, "ssssssss", [
     $start_date, $end_date
 ]);
 
-// Get validasi Haversine (jarak kunjungan vs radius valid)
-$haversineQuery = "SELECT
-                    CASE
-                        WHEN jarak_dari_project <= 25 THEN '0-25m'
-                        WHEN jarak_dari_project <= 50 THEN '26-50m'
-                        WHEN jarak_dari_project <= 100 THEN '51-100m'
-                        ELSE '>100m'
-                    END as range_jarak,
-                    COUNT(*) as jumlah,
-                    ROUND(AVG(accuracy), 2) as avg_accuracy
-                   FROM visit_reports
-                   WHERE DATE(waktu_kunjungan) BETWEEN ? AND ?
-                   GROUP BY range_jarak
-                   ORDER BY range_jarak";
-$haversineResult = executeQuery($haversineQuery, "ss", [$start_date, $end_date]);
-
-// Get overall statistics
+// Get overall statistics (dihitung dari laporan kunjungan yang di-submit, bukan raw GPS tracking)
 $overallQuery = "SELECT
-                    COUNT(*) as total_tracking_points,
+                    COUNT(*) as total_laporan,
                     ROUND(AVG(accuracy), 2) as overall_avg_accuracy,
                     COUNT(DISTINCT admin_id) as total_admin
-                 FROM gps_tracking
-                 WHERE DATE(timestamp) BETWEEN ? AND ?";
+                 FROM visit_reports
+                 WHERE DATE(waktu_kunjungan) BETWEEN ? AND ?";
 $overallResult = executeQuery($overallQuery, "ss", [$start_date, $end_date]);
 $overall = $overallResult['data']->fetch_assoc();
+
+// Get jarak admin dari kantor pusat (central point) - agregat per admin
+// Dihitung dari titik laporan kunjungan (visit_reports), bukan dari raw GPS tracking,
+// supaya konsisten dengan jarak_dari_project (yang juga diambil saat submit laporan)
+$office = getOfficeLocation();
+$officeDistanceByAdmin = [];
+
+if ($office) {
+    $officePointsQuery = "SELECT vr.admin_id, u.nama_lengkap, vr.latitude, vr.longitude
+                          FROM visit_reports vr
+                          JOIN users u ON vr.admin_id = u.id
+                          WHERE DATE(vr.waktu_kunjungan) BETWEEN ? AND ?";
+    $officePointsResult = executeQuery($officePointsQuery, "ss", [$start_date, $end_date]);
+
+    if ($officePointsResult['success']) {
+        while ($point = $officePointsResult['data']->fetch_assoc()) {
+            $distance = calculateHaversineDistance(
+                $point['latitude'],
+                $point['longitude'],
+                $office['latitude'],
+                $office['longitude']
+            );
+
+            $adminId = $point['admin_id'];
+            if (!isset($officeDistanceByAdmin[$adminId])) {
+                $officeDistanceByAdmin[$adminId] = [
+                    'nama' => $point['nama_lengkap'],
+                    'count' => 0,
+                    'sum' => 0,
+                    'max' => 0
+                ];
+            }
+
+            $officeDistanceByAdmin[$adminId]['count']++;
+            $officeDistanceByAdmin[$adminId]['sum'] += $distance;
+            $officeDistanceByAdmin[$adminId]['max'] = max($officeDistanceByAdmin[$adminId]['max'], $distance);
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -228,8 +257,8 @@ $overall = $overallResult['data']->fetch_assoc();
         <!-- Overall Statistics -->
         <div class="dashboard-grid">
             <div class="stat-card info">
-                <div class="stat-label">Total Data GPS</div>
-                <div class="stat-value"><?php echo number_format($overall['total_tracking_points']); ?></div>
+                <div class="stat-label">Total Laporan</div>
+                <div class="stat-value"><?php echo number_format($overall['total_laporan']); ?></div>
             </div>
             <div class="stat-card success">
                 <div class="stat-label">Rata-rata Akurasi GPS</div>
@@ -241,73 +270,10 @@ $overall = $overallResult['data']->fetch_assoc();
             </div>
         </div>
 
-        <!-- Section 1: Validasi Haversine -->
+        <!-- Section 1: Evaluasi Produktivitas -->
         <div class="card">
             <div class="card-header">
-                <strong>1. Validasi Metode Haversine untuk Verifikasi Kunjungan</strong>
-            </div>
-            <div class="card-body">
-                <p><strong>Tujuan Analisis:</strong> Mengevaluasi efektivitas metode Haversine dalam menghitung jarak dan memvalidasi kehadiran admin di lokasi project.</p>
-
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Range Jarak dari Project</th>
-                                <th>Jumlah Kunjungan</th>
-                                <th>Rata-rata Akurasi GPS (m)</th>
-                                <th>Interpretasi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $haversineLabels = [];
-                            $haversineData = [];
-                            while ($hav = $haversineResult['data']->fetch_assoc()):
-                                $haversineLabels[] = $hav['range_jarak'];
-                                $haversineData[] = $hav['jumlah'];
-
-                                $interpretation = '';
-                                if ($hav['range_jarak'] == '0-25m') {
-                                    $interpretation = 'Sangat Valid - Admin berada di lokasi';
-                                } elseif ($hav['range_jarak'] == '26-50m') {
-                                    $interpretation = 'Valid - Dalam radius acceptable';
-                                } elseif ($hav['range_jarak'] == '51-100m') {
-                                    $interpretation = 'Marginal - Perlu verifikasi manual';
-                                } else {
-                                    $interpretation = 'Invalid - Di luar radius valid';
-                                }
-                            ?>
-                                <tr>
-                                    <td><strong><?php echo $hav['range_jarak']; ?></strong></td>
-                                    <td><?php echo $hav['jumlah']; ?></td>
-                                    <td><?php echo $hav['avg_accuracy']; ?></td>
-                                    <td><?php echo $interpretation; ?></td>
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div style="max-width: 600px; margin: 20px auto;">
-                    <canvas id="chartHaversine"></canvas>
-                </div>
-
-                <div class="alert alert-info mt-3">
-                    <strong>Kesimpulan:</strong>
-                    <ul>
-                        <li>Metode Haversine efektif untuk menghitung jarak antara posisi admin dan lokasi project</li>
-                        <li>Threshold radius 50m memberikan balance antara akurasi dan usability</li>
-                        <li>Akurasi GPS mempengaruhi validitas hasil perhitungan Haversine</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 3: Evaluasi Produktivitas -->
-        <div class="card">
-            <div class="card-header">
-                <strong>2. Evaluasi Produktivitas Admin Lapangan</strong>
+                <strong>1. Evaluasi Produktivitas Admin Lapangan</strong>
             </div>
             <div class="card-body">
                 <p><strong>Tujuan Analisis:</strong> Mengevaluasi kinerja admin lapangan berdasarkan metrik jarak tempuh, jumlah kunjungan, dan efisiensi kerja.</p>
@@ -360,20 +326,90 @@ $overall = $overallResult['data']->fetch_assoc();
             </div>
         </div>
 
+        <!-- Section 2: Analisis Jarak dari Kantor Pusat -->
+        <div class="card">
+            <div class="card-header">
+                <strong>2. Analisis Jarak Admin dari Kantor Pusat (Central Point)</strong>
+            </div>
+            <div class="card-body">
+                <p><strong>Tujuan Analisis:</strong> Mengukur seberapa jauh lokasi kunjungan admin lapangan (saat submit laporan) dari titik kantor pusat menggunakan metode Haversine, sebagai referensi tambahan evaluasi produktivitas.</p>
+
+                <?php if (!$office): ?>
+                    <div class="alert alert-warning">
+                        Titik koordinat kantor pusat belum diatur di database (tabel <code>office_location</code>).
+                    </div>
+                <?php elseif (empty($officeDistanceByAdmin)): ?>
+                    <p class="text-center text-secondary">Belum ada laporan kunjungan pada periode ini</p>
+                <?php else: ?>
+                    <div class="alert alert-info">
+                        <strong>Kantor Pusat:</strong> <?php echo htmlspecialchars($office['nama_kantor']); ?>
+                        <?php if (!empty($office['alamat'])): ?> - <?php echo htmlspecialchars($office['alamat']); ?><?php endif; ?>
+                        (Radius Valid: <?php echo (int) $office['radius_valid']; ?> m)
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama Admin</th>
+                                    <th>Jumlah Laporan</th>
+                                    <th>Rata-rata Jarak dari Kantor (km)</th>
+                                    <th>Jarak Terjauh dari Kantor (km)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $jarakKantorLabels = [];
+                                $jarakKantorData = [];
+                                foreach ($officeDistanceByAdmin as $data):
+                                    $avgKm = round(($data['sum'] / $data['count']) / 1000, 2);
+                                    $maxKm = round($data['max'] / 1000, 2);
+                                    $jarakKantorLabels[] = $data['nama'];
+                                    $jarakKantorData[] = $avgKm;
+                                ?>
+                                    <tr>
+                                        <td><strong><?php echo htmlspecialchars($data['nama']); ?></strong></td>
+                                        <td><?php echo number_format($data['count']); ?></td>
+                                        <td><?php echo $avgKm; ?></td>
+                                        <td><?php echo $maxKm; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="max-width: 600px; margin: 20px auto;">
+                        <canvas id="chartJarakKantor"></canvas>
+                    </div>
+
+                    <div class="alert alert-info mt-3">
+                        <strong>Interpretasi:</strong>
+                        <ul>
+                            <li>Rata-rata jarak yang besar mengindikasikan admin lebih banyak beroperasi jauh dari kantor pusat (coverage area luas)</li>
+                            <li>Jarak terjauh membantu mengidentifikasi titik kunjungan ekstrem yang mungkin perlu diverifikasi</li>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
     </div>
 
     <!-- JavaScript Charts -->
     <script>
-        // Chart Haversine
-        const ctxHaversine = document.getElementById('chartHaversine').getContext('2d');
-        new Chart(ctxHaversine, {
-            type: 'pie',
+        <?php if ($office && !empty($officeDistanceByAdmin)): ?>
+        // Chart Jarak dari Kantor Pusat
+        const ctxJarakKantor = document.getElementById('chartJarakKantor').getContext('2d');
+        new Chart(ctxJarakKantor, {
+            type: 'bar',
             data: {
-                labels: <?php echo json_encode($haversineLabels); ?>,
+                labels: <?php echo json_encode($jarakKantorLabels); ?>,
                 datasets: [{
-                    label: 'Distribusi Jarak Kunjungan',
-                    data: <?php echo json_encode($haversineData); ?>,
-                    backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
+                    label: 'Rata-rata Jarak dari Kantor (km)',
+                    data: <?php echo json_encode($jarakKantorData); ?>,
+                    backgroundColor: '#10b981',
+                    borderColor: '#059669',
+                    borderWidth: 1
                 }]
             },
             options: {
@@ -381,11 +417,21 @@ $overall = $overallResult['data']->fetch_assoc();
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Distribusi Jarak Kunjungan dari Project (Haversine)'
+                        text: 'Rata-rata Jarak Admin dari Kantor Pusat'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jarak (km)'
+                        }
                     }
                 }
             }
         });
+        <?php endif; ?>
 
         // Profile dropdown toggle
         function toggleProfileDropdown() {
