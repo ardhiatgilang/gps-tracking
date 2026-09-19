@@ -59,9 +59,7 @@ $recentResult = executeQuery($recentQuery);
 $recentReports = [];
 while ($row = $recentResult['data']->fetch_assoc()) {
     $row['is_today'] = (date('Y-m-d', strtotime($row['waktu_kunjungan'])) == $today);
-    $row['waktu_format'] = $row['is_today']
-        ? date('H:i', strtotime($row['waktu_kunjungan']))
-        : date('d/m H:i', strtotime($row['waktu_kunjungan']));
+    $row['waktu_format'] = date('d/m/Y H:i', strtotime($row['waktu_kunjungan']));
     $recentReports[] = $row;
 }
 

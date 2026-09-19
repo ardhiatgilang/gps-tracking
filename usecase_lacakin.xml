@@ -1,0 +1,133 @@
+<mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ==================== SYSTEM BOUNDARY ==================== -->
+    <mxCell id="sys" value="Sistem LACAKIN" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;verticalAlign=top;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+      <mxGeometry x="150" y="40" width="980" height="730" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== ACTORS ==================== -->
+    <mxCell id="act_admin" value="Admin Lapangan" style="shape=mxgraph.uml.actor;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="28" y="350" width="60" height="80" as="geometry" />
+    </mxCell>
+
+    <mxCell id="act_spv" value="Supervisor" style="shape=mxgraph.uml.actor;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="1195" y="350" width="60" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== USE CASES ==================== -->
+
+    <!-- LOGIN (shared) -->
+    <mxCell id="uc_login" value="Login" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="563" y="85" width="154" height="50" as="geometry" />
+    </mxCell>
+
+    <!-- ADMIN USE CASES -->
+    <mxCell id="uc1" value="Mulai Tracking GPS" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="225" y="180" width="170" height="52" as="geometry" />
+    </mxCell>
+
+    <mxCell id="uc2" value="Hentikan Tracking GPS" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="220" y="268" width="175" height="52" as="geometry" />
+    </mxCell>
+
+    <mxCell id="uc3" value="Buat Laporan Kunjungan" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="215" y="358" width="178" height="55" as="geometry" />
+    </mxCell>
+
+    <mxCell id="uc4" value="Upload Foto Laporan" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="220" y="452" width="170" height="52" as="geometry" />
+    </mxCell>
+
+    <mxCell id="uc5" value="Lihat Riwayat Kunjungan" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="215" y="542" width="178" height="52" as="geometry" />
+    </mxCell>
+
+    <!-- MIDDLE (system process - include) -->
+    <mxCell id="uc_hav" value="Validasi Lokasi (Haversine)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="523" y="362" width="195" height="55" as="geometry" />
+    </mxCell>
+
+    <!-- SUPERVISOR USE CASES -->
+    <mxCell id="uc6" value="Monitoring Lokasi Real-time" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="840" y="180" width="188" height="52" as="geometry" />
+    </mxCell>
+
+    <mxCell id="uc7" value="Verifikasi Laporan Kunjungan" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="837" y="268" width="193" height="52" as="geometry" />
+    </mxCell>
+
+    <mxCell id="uc8" value="Lihat Analisis Kinerja" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="845" y="358" width="178" height="52" as="geometry" />
+    </mxCell>
+
+    <mxCell id="uc9" value="Export Laporan" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="862" y="450" width="152" height="52" as="geometry" />
+    </mxCell>
+
+    <mxCell id="uc10" value="Kelola Data Admin" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="848" y="542" width="170" height="52" as="geometry" />
+    </mxCell>
+
+    <mxCell id="uc11" value="Kelola Lokasi Project" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="848" y="635" width="170" height="52" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== EDGES: Admin to Use Cases ==================== -->
+    <mxCell id="e_a_login" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_admin" target="uc_login" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_a1" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_admin" target="uc1" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_a2" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_admin" target="uc2" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_a3" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_admin" target="uc3" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_a4" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_admin" target="uc4" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_a5" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_admin" target="uc5" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== EDGES: Supervisor to Use Cases ==================== -->
+    <mxCell id="e_s_login" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_spv" target="uc_login" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_s6" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_spv" target="uc6" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_s7" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_spv" target="uc7" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_s8" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_spv" target="uc8" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_s9" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_spv" target="uc9" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_s10" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_spv" target="uc10" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_s11" value="" style="html=1;endArrow=none;strokeColor=#000000;" edge="1" source="act_spv" target="uc11" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== INCLUDE RELATIONSHIPS ==================== -->
+    <!-- Buat Laporan Kunjungan <<include>> Validasi Lokasi -->
+    <mxCell id="inc1" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;dashed=1;html=1;endArrow=open;endFill=0;startArrow=none;strokeColor=#000000;fontSize=10;fontStyle=2;" edge="1" source="uc3" target="uc_hav" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Upload Foto <<include>> Buat Laporan (extend relationship) -->
+    <mxCell id="ext1" value="&lt;&lt;extend&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;dashed=1;html=1;endArrow=open;endFill=0;startArrow=none;strokeColor=#000000;fontSize=10;fontStyle=2;" edge="1" source="uc4" target="uc3" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

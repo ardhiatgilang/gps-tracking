@@ -1,0 +1,442 @@
+<mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ==================== USERS (pusat) ==================== -->
+    <mxCell id="E_users" value="" style="rounded=0;fillColor=#ffffff;strokeColor=#666666;container=1;collapsible=0;expand=0;html=1;" vertex="1" parent="1">
+      <mxGeometry x="450" y="30" width="160" height="228" as="geometry" />
+    </mxCell>
+    <mxCell id="u_hdr" value="" style="rounded=0;fillColor=#f5f5f5;strokeColor=#666666;html=1;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="0" width="160" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="u_c" value="C" style="ellipse;fillColor=#388e3c;strokeColor=#388e3c;fontColor=#ffffff;fontStyle=1;fontSize=10;align=center;verticalAlign=middle;html=1;" vertex="1" parent="E_users">
+      <mxGeometry x="5" y="5" width="20" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="u_nm" value="&lt;b&gt;USERS&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="29" y="5" width="126" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a1" value="PK  id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=1;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="30" width="160" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a2" value="username" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="48" width="160" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a3" value="password" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="66" width="160" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a4" value="foto_profil" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="84" width="160" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a5" value="nama_lengkap" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="102" width="160" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a6" value="email" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="120" width="160" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a7" value="no_hp" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="138" width="160" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a8" value="role" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="156" width="160" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a9" value="status" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="174" width="160" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a10" value="created_at" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="192" width="160" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="u_a11" value="updated_at" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_users">
+      <mxGeometry x="0" y="210" width="160" height="18" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== GPS_TRACKING ==================== -->
+    <mxCell id="E_gps" value="" style="rounded=0;fillColor=#ffffff;strokeColor=#666666;container=1;collapsible=0;expand=0;html=1;" vertex="1" parent="1">
+      <mxGeometry x="60" y="130" width="165" height="300" as="geometry" />
+    </mxCell>
+    <mxCell id="g_hdr" value="" style="rounded=0;fillColor=#f5f5f5;strokeColor=#666666;html=1;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="0" width="165" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="g_c" value="C" style="ellipse;fillColor=#388e3c;strokeColor=#388e3c;fontColor=#ffffff;fontStyle=1;fontSize=10;align=center;verticalAlign=middle;html=1;" vertex="1" parent="E_gps">
+      <mxGeometry x="5" y="5" width="20" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="g_nm" value="&lt;b&gt;GPS_TRACKING&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="29" y="5" width="131" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a1" value="PK  id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=1;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="30" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a2" value="FK  admin_id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=2;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="48" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a3" value="latitude" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="66" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a4" value="longitude" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="84" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a5" value="accuracy" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="102" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a6" value="altitude" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="120" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a7" value="speed" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="138" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a8" value="heading" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="156" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a9" value="timestamp" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="174" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a10" value="location_type" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="192" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a11" value="signal_strength" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="210" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a12" value="device_info" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="228" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a13" value="battery_level" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="246" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a14" value="network_type" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="264" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="g_a15" value="created_at" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_gps">
+      <mxGeometry x="0" y="282" width="165" height="18" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== TRACKING_SESSIONS ==================== -->
+    <mxCell id="E_tsess" value="" style="rounded=0;fillColor=#ffffff;strokeColor=#666666;container=1;collapsible=0;expand=0;html=1;" vertex="1" parent="1">
+      <mxGeometry x="680" y="30" width="170" height="174" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_hdr" value="" style="rounded=0;fillColor=#f5f5f5;strokeColor=#666666;html=1;" vertex="1" parent="E_tsess">
+      <mxGeometry x="0" y="0" width="170" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_c" value="C" style="ellipse;fillColor=#388e3c;strokeColor=#388e3c;fontColor=#ffffff;fontStyle=1;fontSize=10;align=center;verticalAlign=middle;html=1;" vertex="1" parent="E_tsess">
+      <mxGeometry x="5" y="5" width="20" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_nm" value="&lt;b&gt;TRACKING_SESSIONS&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="E_tsess">
+      <mxGeometry x="29" y="5" width="136" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_a1" value="PK  id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=1;" vertex="1" parent="E_tsess">
+      <mxGeometry x="0" y="30" width="170" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_a2" value="FK  admin_id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=2;" vertex="1" parent="E_tsess">
+      <mxGeometry x="0" y="48" width="170" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_a3" value="session_start" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_tsess">
+      <mxGeometry x="0" y="66" width="170" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_a4" value="session_end" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_tsess">
+      <mxGeometry x="0" y="84" width="170" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_a5" value="is_active" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_tsess">
+      <mxGeometry x="0" y="102" width="170" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_a6" value="total_tracking_points" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_tsess">
+      <mxGeometry x="0" y="120" width="170" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_a7" value="avg_accuracy" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_tsess">
+      <mxGeometry x="0" y="138" width="170" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="ts_a8" value="created_at" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_tsess">
+      <mxGeometry x="0" y="156" width="170" height="18" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== PROJECT_LOCATIONS ==================== -->
+    <mxCell id="E_proj" value="" style="rounded=0;fillColor=#ffffff;strokeColor=#666666;container=1;collapsible=0;expand=0;html=1;" vertex="1" parent="1">
+      <mxGeometry x="60" y="530" width="165" height="210" as="geometry" />
+    </mxCell>
+    <mxCell id="p_hdr" value="" style="rounded=0;fillColor=#f5f5f5;strokeColor=#666666;html=1;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="0" width="165" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="p_c" value="C" style="ellipse;fillColor=#388e3c;strokeColor=#388e3c;fontColor=#ffffff;fontStyle=1;fontSize=10;align=center;verticalAlign=middle;html=1;" vertex="1" parent="E_proj">
+      <mxGeometry x="5" y="5" width="20" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="p_nm" value="&lt;b&gt;PROJECT_LOCATIONS&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="E_proj">
+      <mxGeometry x="29" y="5" width="131" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="p_a1" value="PK  id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=1;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="30" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="p_a2" value="nama_project" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="48" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="p_a3" value="alamat" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="66" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="p_a4" value="latitude" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="84" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="p_a5" value="longitude" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="102" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="p_a6" value="radius_valid" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="120" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="p_a7" value="deskripsi" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="138" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="p_a8" value="status" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="156" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="p_a9" value="created_at" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="174" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="p_a10" value="updated_at" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_proj">
+      <mxGeometry x="0" y="192" width="165" height="18" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== VISIT_REPORTS ==================== -->
+    <mxCell id="E_visit" value="" style="rounded=0;fillColor=#ffffff;strokeColor=#666666;container=1;collapsible=0;expand=0;html=1;" vertex="1" parent="1">
+      <mxGeometry x="450" y="380" width="165" height="336" as="geometry" />
+    </mxCell>
+    <mxCell id="v_hdr" value="" style="rounded=0;fillColor=#f5f5f5;strokeColor=#666666;html=1;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="0" width="165" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="v_c" value="C" style="ellipse;fillColor=#388e3c;strokeColor=#388e3c;fontColor=#ffffff;fontStyle=1;fontSize=10;align=center;verticalAlign=middle;html=1;" vertex="1" parent="E_visit">
+      <mxGeometry x="5" y="5" width="20" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="v_nm" value="&lt;b&gt;VISIT_REPORTS&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="29" y="5" width="131" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a1" value="PK  id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=1;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="30" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a2" value="FK  admin_id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=2;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="48" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a3" value="FK  project_id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=2;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="66" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a4" value="FK  verified_by" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=2;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="84" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a5" value="latitude" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="102" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a6" value="longitude" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="120" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a7" value="accuracy" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="138" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a8" value="jarak_dari_project" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="156" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a9" value="is_valid" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="174" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a10" value="foto_laporan" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="192" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a11" value="jenis_pekerjaan" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="210" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a12" value="catatan" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="228" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a13" value="waktu_kunjungan" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="246" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a14" value="waktu_submit" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="264" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a15" value="durasi_kunjungan" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="282" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a16" value="status" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="300" width="165" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="v_a17" value="verified_at" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_visit">
+      <mxGeometry x="0" y="318" width="165" height="18" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== DAILY_SUMMARY ==================== -->
+    <mxCell id="E_daily" value="" style="rounded=0;fillColor=#ffffff;strokeColor=#666666;container=1;collapsible=0;expand=0;html=1;" vertex="1" parent="1">
+      <mxGeometry x="680" y="280" width="180" height="282" as="geometry" />
+    </mxCell>
+    <mxCell id="d_hdr" value="" style="rounded=0;fillColor=#f5f5f5;strokeColor=#666666;html=1;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="0" width="180" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="d_c" value="C" style="ellipse;fillColor=#388e3c;strokeColor=#388e3c;fontColor=#ffffff;fontStyle=1;fontSize=10;align=center;verticalAlign=middle;html=1;" vertex="1" parent="E_daily">
+      <mxGeometry x="5" y="5" width="20" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="d_nm" value="&lt;b&gt;DAILY_SUMMARY&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="29" y="5" width="146" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a1" value="PK  id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=1;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="30" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a2" value="FK  admin_id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=2;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="48" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a3" value="tanggal" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="66" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a4" value="total_jarak_tempuh" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="84" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a5" value="jumlah_kunjungan" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="102" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a6" value="jumlah_kunjungan_valid" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="120" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a7" value="durasi_kerja_menit" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="138" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a8" value="waktu_mulai" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="156" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a9" value="waktu_selesai" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="174" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a10" value="efisiensi_score" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="192" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a11" value="rata_rata_jarak_per_kunjungan" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=10;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="210" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a12" value="success_rate" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="228" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a13" value="created_at" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="246" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="d_a14" value="updated_at" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_daily">
+      <mxGeometry x="0" y="264" width="180" height="18" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== HAVERSINE_VALIDATION (standalone) ==================== -->
+    <mxCell id="E_hav" value="" style="rounded=0;fillColor=#ffffff;strokeColor=#666666;container=1;collapsible=0;expand=0;html=1;" vertex="1" parent="1">
+      <mxGeometry x="910" y="140" width="180" height="264" as="geometry" />
+    </mxCell>
+    <mxCell id="h_hdr" value="" style="rounded=0;fillColor=#f5f5f5;strokeColor=#666666;html=1;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="0" width="180" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="h_c" value="C" style="ellipse;fillColor=#388e3c;strokeColor=#388e3c;fontColor=#ffffff;fontStyle=1;fontSize=10;align=center;verticalAlign=middle;html=1;" vertex="1" parent="E_hav">
+      <mxGeometry x="5" y="5" width="20" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="h_nm" value="&lt;b&gt;HAVERSINE_VALIDATION&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="E_hav">
+      <mxGeometry x="29" y="5" width="146" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a1" value="PK  id" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;fontStyle=1;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="30" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a2" value="nama_rute" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="48" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a3" value="lat1" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="66" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a4" value="lon1" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="84" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a5" value="lat2" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="102" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a6" value="lon2" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="120" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a7" value="jarak_aktual" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="138" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a8" value="jarak_haversine" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="156" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a9" value="error_meter" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="174" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a10" value="error_persen" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="192" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a11" value="kategori_jarak" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="210" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a12" value="catatan" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="228" width="180" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="h_a13" value="created_at" style="text;html=1;align=left;verticalAlign=middle;spacingLeft=8;fontSize=11;" vertex="1" parent="E_hav">
+      <mxGeometry x="0" y="246" width="180" height="18" as="geometry" />
+    </mxCell>
+
+    <!-- ==================== RELASI LRS - Panah dari PK ke FK ==================== -->
+
+    <!-- USERS.id --> GPS_TRACKING.admin_id -->
+    <mxCell id="R1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=open;endFill=0;startArrow=none;endSize=8;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.3;entryDx=0;entryDy=0;" edge="1" source="E_users" target="E_gps" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="R1_1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=12;" vertex="1" connectable="0" parent="R1">
+      <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+    <mxCell id="R1_M" value="many" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=3;fontSize=10;" vertex="1" connectable="0" parent="R1">
+      <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+
+    <!-- USERS.id --> TRACKING_SESSIONS.admin_id -->
+    <mxCell id="R2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=open;endFill=0;startArrow=none;endSize=8;exitX=1;exitY=0.2;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" source="E_users" target="E_tsess" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="R2_1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=12;" vertex="1" connectable="0" parent="R2">
+      <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+    <mxCell id="R2_M" value="many" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=3;fontSize=10;" vertex="1" connectable="0" parent="R2">
+      <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+
+    <!-- USERS.id --> VISIT_REPORTS.admin_id -->
+    <mxCell id="R3" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=open;endFill=0;startArrow=none;endSize=8;exitX=0.35;exitY=1;exitDx=0;exitDy=0;entryX=0.35;entryY=0;entryDx=0;entryDy=0;" edge="1" source="E_users" target="E_visit" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="R3_1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=12;" vertex="1" connectable="0" parent="R3">
+      <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+    <mxCell id="R3_M" value="many" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=3;fontSize=10;" vertex="1" connectable="0" parent="R3">
+      <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+
+    <!-- USERS.id --> VISIT_REPORTS.verified_by (opsional) -->
+    <mxCell id="R4" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=open;endFill=0;startArrow=none;endSize=8;dashed=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=1;entryY=0.08;entryDx=0;entryDy=0;" edge="1" source="E_users" target="E_visit" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="655" y="210" />
+          <mxPoint x="655" y="408" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="R4_1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=12;" vertex="1" connectable="0" parent="R4">
+      <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+    <mxCell id="R4_M" value="many" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=3;fontSize=10;" vertex="1" connectable="0" parent="R4">
+      <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+
+    <!-- USERS.id --> DAILY_SUMMARY.admin_id -->
+    <mxCell id="R5" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=open;endFill=0;startArrow=none;endSize=8;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" source="E_users" target="E_daily" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="R5_1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=12;" vertex="1" connectable="0" parent="R5">
+      <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+    <mxCell id="R5_M" value="many" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=3;fontSize=10;" vertex="1" connectable="0" parent="R5">
+      <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+
+    <!-- PROJECT_LOCATIONS.id --> VISIT_REPORTS.project_id -->
+    <mxCell id="R6" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=open;endFill=0;startArrow=none;endSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.2;entryDx=0;entryDy=0;" edge="1" source="E_proj" target="E_visit" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="R6_1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=12;" vertex="1" connectable="0" parent="R6">
+      <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+    <mxCell id="R6_M" value="many" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=3;fontSize=10;" vertex="1" connectable="0" parent="R6">
+      <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+
+  </root>
+</mxGraphModel>

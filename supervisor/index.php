@@ -236,11 +236,9 @@ $recentResult = executeQuery($recentQuery);
                                             <td>
                                                 <?php
                                                 $reportDate = date('Y-m-d', strtotime($recent['waktu_kunjungan']));
-                                                if ($reportDate == $today) {
-                                                    echo '<span class="text-success">' . date('H:i', strtotime($recent['waktu_kunjungan'])) . '</span>';
-                                                } else {
-                                                    echo '<span class="text-secondary">' . date('d/m H:i', strtotime($recent['waktu_kunjungan'])) . '</span>';
-                                                }
+                                                $waktuFormatted = date('d/m/Y H:i', strtotime($recent['waktu_kunjungan']));
+                                                $waktuClass = $reportDate == $today ? 'text-success' : 'text-secondary';
+                                                echo "<span class='$waktuClass'>$waktuFormatted</span>";
                                                 ?>
                                             </td>
                                             <td><?php echo htmlspecialchars($recent['admin_name']); ?></td>

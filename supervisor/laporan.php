@@ -250,7 +250,7 @@ $adminResult = executeQuery($adminQuery);
                                             <?php
                                             $jarak = $report['jarak_dari_project'];
                                             $class = $jarak <= 50 ? 'text-success' : 'text-danger';
-                                            echo "<span class='$class'>" . number_format($jarak, 2) . " m</span>";
+                                            echo "<span class='$class'>" . number_format($jarak, 2, '.', '') . " m</span>";
                                             ?>
                                         </td>
                                         <td>

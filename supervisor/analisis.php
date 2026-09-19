@@ -329,7 +329,7 @@ if ($office) {
         <!-- Section 2: Analisis Jarak dari Kantor Pusat -->
         <div class="card">
             <div class="card-header">
-                <strong>2. Analisis Jarak Admin dari Kantor Pusat (Central Point)</strong>
+                <strong>2. Analisis Jarak Admin dari Kantor Pusat</strong>
             </div>
             <div class="card-body">
                 <p><strong>Tujuan Analisis:</strong> Mengukur seberapa jauh lokasi kunjungan admin lapangan (saat submit laporan) dari titik kantor pusat menggunakan metode Haversine, sebagai referensi tambahan evaluasi produktivitas.</p>

@@ -240,7 +240,7 @@ $office = getOfficeLocation();
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" style="height:28px;flex-shrink:0;">
-                        <span><strong>Marker Hijau + Lingkaran:</strong> Kantor Pusat (Central Point) + Radius Valid</span>
+                        <span><strong>Marker Hijau + Lingkaran:</strong> Kantor Pusat + Radius Valid</span>
                     </div>
                 </div>
             </div>
